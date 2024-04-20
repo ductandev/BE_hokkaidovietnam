@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Query } from '@nestjs/common';
 import { ProductTypeService } from './product-type.service';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -56,10 +56,11 @@ export class ProductTypeController {
   // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-panigation-product-type/:pageIndex/:pageSize")
+  // @Get("get-pagination-product-type/:pageIndex/:pageSize")
+  @Get("get-pagination-product-type")
   getPanigationProductType(
-    @Param("pageIndex") pageIndex: number,
-    @Param("pageSize") pageSize: number,
+    @Query("page") pageIndex: number,
+    @Query("limit") pageSize: number,
     @Res() res: Response
   ) {
     return this.productTypeService.getPanigationProductType(pageIndex, pageSize, res)

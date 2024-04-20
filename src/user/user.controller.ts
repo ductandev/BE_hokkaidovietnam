@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, Res, UseGuards, Put, UseInterceptors, UploadedFile, SetMetadata } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, Res, UseGuards, Put, UseInterceptors, UploadedFile, SetMetadata, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -52,10 +52,11 @@ export class UserController {
   // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN)
-  @Get("get-list-user-panigation/:pageIndex/:pageSize")
+  // @Get("get-list-user-pagination/:pageIndex/:pageSize")
+  @Get("get-list-user-pagination")
   getListUserPanigation(
-    @Param("pageIndex") pageIndex: number,
-    @Param("pageSize") pageSize: number,
+    @Query("page") pageIndex: number,
+    @Query("limit") pageSize: number,
     @Res() res: Response
   ) {
     return this.userService.getListUserPanigation(pageIndex, pageSize, res)

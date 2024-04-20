@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFiles, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFiles, Patch, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -61,10 +61,12 @@ export class ProductController {
   // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-panigation-product/:pageIndex/:pageSize")
+  // @Get("get-pagination-product/:pageIndex/:pageSize")
+  // get-pagination-product?pageIndex=1&pageSize=3
+  @Get("get-pagination-product")
   getPanigationProduct(
-    @Param("pageIndex") pageIndex: number,
-    @Param("pageSize") pageSize: number,
+    @Query("page") pageIndex: number,
+    @Query("limit") pageSize: number,
     @Res() res: Response
   ) {
     return this.productService.getPanigationProduct(pageIndex, pageSize, res)

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Query } from '@nestjs/common';
 import { OrderService } from './order.service';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -56,10 +56,11 @@ export class OrderController {
   // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN, Role.USER)
-  @Get("get-panigation-order/:pageIndex/:pageSize")
+  // @Get("get-pagination-order/:pageIndex/:pageSize")
+  @Get("get-pagination-order")
   getPanigationOrder(
-    @Param("pageIndex") pageIndex: number,
-    @Param("pageSize") pageSize: number,
+    @Query("page") pageIndex: number,
+    @Query("limit") pageSize: number,
     @Res() res: Response
   ) {
     return this.orderService.getPanigationOrder(pageIndex, pageSize, res)

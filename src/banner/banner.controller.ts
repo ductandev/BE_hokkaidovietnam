@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
 import { BannerService } from './banner.service';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -46,10 +46,11 @@ export class BannerController {
   // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-panigation-banner/:pageIndex/:pageSize")
+  // @Get("get-pagination-banner/:pageIndex/:pageSize")
+  @Get("get-pagination-banner")
   getPanigationBanner(
-    @Param("pageIndex") pageIndex: number,
-    @Param("pageSize") pageSize: number,
+    @Query("page") pageIndex: number,
+    @Query("limit") pageSize: number,
     @Res() res: Response
   ) {
     return this.bannerService.getPanigationBanner(pageIndex, pageSize, res)
