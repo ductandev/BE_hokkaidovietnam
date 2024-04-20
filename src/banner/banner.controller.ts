@@ -15,7 +15,7 @@ import { FileUploadDto_banner } from './dto/upload.dto';
 
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+// @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("Banner")
 @Controller('api/banner/')
 export class BannerController {
@@ -25,7 +25,7 @@ export class BannerController {
   //            GET ALL BANNER
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-all-banner")
   getAllBanner(@Res() res: Response) {
     return this.bannerService.getAllBanner(res)
@@ -35,7 +35,7 @@ export class BannerController {
   //           GET NAME BANNER BY ID
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-banner-by-id/:bannerID")
   getBannerById(@Param("bannerID") bannerID: number, @Res() res: Response) {
     return this.bannerService.getBannerById(bannerID, res)
@@ -45,7 +45,7 @@ export class BannerController {
   //      GET PANIGATION LIST BANNER
   // ============================================
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-panigation-banner/:pageIndex/:pageSize")
   getPanigationBanner(
     @Param("pageIndex") pageIndex: number,
@@ -60,6 +60,7 @@ export class BannerController {
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(201)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Post("post-banner")
   @UseInterceptors(FileInterceptor("hinhAnh"))
@@ -78,6 +79,7 @@ export class BannerController {
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Put("put-banner/:bannerID")
   @UseInterceptors(FileInterceptor("hinhAnh"))
@@ -96,6 +98,7 @@ export class BannerController {
   //                DELETE IMG BANNER
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Delete("delete-banner/:bannerID")
   deleteBanner(@Param("bannerID") bannerID: number, @Res() res: Response) {

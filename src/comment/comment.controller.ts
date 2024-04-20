@@ -16,7 +16,7 @@ import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+// @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("BinhLuan")
 @Controller('api/comment/')
 export class CommentController {
@@ -26,7 +26,7 @@ export class CommentController {
   //            GET ALL COMMENT
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
   @Get("get-all-comment")
   getAllComment(@Res() res: Response) {
     return this.commentService.getAllComment(res)
@@ -37,7 +37,7 @@ export class CommentController {
   //         GET COMMENT BY USER ID
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-all-comment-by-user-id/:userID")
   getCommentByUserId(@Param("userID") userID: number, @Res() res: Response) {
     return this.commentService.getCommentByUserId(userID, res)
@@ -48,7 +48,7 @@ export class CommentController {
   //         GET COMMENT BY PRODUCT ID
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-all-comment-by-product-id/:productID")
   getCommentByProductId(@Param("productID") productID: number, @Res() res: Response) {
     return this.commentService.getCommentByProductId(productID, res)
@@ -59,7 +59,8 @@ export class CommentController {
   //               POST COMMENT 
   // ============================================
   @HttpCode(201)
-  @Roles(Role.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Post("post-comment")
   postComment(@Body() body: CreateCommentDto, @Res() res: Response) {
     return this.commentService.postComment(body, res)
@@ -70,7 +71,8 @@ export class CommentController {
   //               PUT COMMENT 
   // ============================================
   @HttpCode(200)
-  @Roles(Role.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Put("put-comment/:commentID")
   putComment(@Param("commentID") commentID: number, @Body() body: CreateCommentDto, @Res() res: Response) {
     return this.commentService.putComment(commentID, body, res)
@@ -81,7 +83,8 @@ export class CommentController {
   //               DELETE COMMENT 
   // ============================================
   @HttpCode(200)
-  @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN, Role.USER)
   @Delete("delete-comment/:commentID")
   deleteComment(@Param("commentID") commentID: number, @Res() res: Response) {
     return this.commentService.deleteComment(commentID, res)

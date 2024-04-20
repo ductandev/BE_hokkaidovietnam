@@ -51,7 +51,7 @@ export class UserController {
   //    LẤY DANH SÁCH NGƯỜI DÙNG PHÂN TRANG
   // ============================================
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  @Roles(Role.ADMIN)
   @Get("get-list-user-panigation/:pageIndex/:pageSize")
   getListUserPanigation(
     @Param("pageIndex") pageIndex: number,

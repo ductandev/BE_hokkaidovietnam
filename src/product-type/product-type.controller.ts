@@ -14,7 +14,7 @@ import { CreateProductTypeDto } from './dto/create-product-type.dto';
 
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+// @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("LoaiSanPham")
 @Controller('api/product-type/')
 export class ProductTypeController {
@@ -25,7 +25,7 @@ export class ProductTypeController {
   //            GET ALL TYPE PRODUCTS
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-all-product-type")
   getAllProductType(@Res() res: Response) {
     return this.productTypeService.getAllProductType(res)
@@ -35,7 +35,7 @@ export class ProductTypeController {
   //       GET NAME PRODUCT TYPE BY ID
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-product-type-by-id/:productTypeID")
   getProductTypeById(@Param("productTypeID") productTypeID: number, @Res() res: Response) {
     return this.productTypeService.getProductTypeById(productTypeID, res)
@@ -45,7 +45,7 @@ export class ProductTypeController {
   //       GET PRODUCT TYPE BY NAME
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-product-type-by-name/:nameProductType")
   getNameProductType(@Param("nameProductType") nameProductType: string, @Res() res: Response) {
     return this.productTypeService.getNameProductType(nameProductType, res)
@@ -55,7 +55,7 @@ export class ProductTypeController {
   //      GET PANIGATION LIST PRODUCT TYPE
   // ============================================
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-panigation-product-type/:pageIndex/:pageSize")
   getPanigationProductType(
     @Param("pageIndex") pageIndex: number,
@@ -69,6 +69,7 @@ export class ProductTypeController {
   //            POST PRODUCT TYPE 
   // ============================================
   @HttpCode(201)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Post("post-product-type")
   postProductType(@Body() body: CreateProductTypeDto, @Res() res: Response) {
@@ -79,6 +80,7 @@ export class ProductTypeController {
   //             PUT PRODUCT TYPE 
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Put("put-product-type/:productTypeID")
   putProductType(@Param("productTypeID") productTypeID: number, @Body() body: CreateProductTypeDto, @Res() res: Response) {
@@ -89,6 +91,7 @@ export class ProductTypeController {
   //            DELETE PRODUCT TYPE 
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Delete("delete-product-type/:productTypeID")
   deleteProductType(@Param("productTypeID") productTypeID: number, @Res() res: Response) {

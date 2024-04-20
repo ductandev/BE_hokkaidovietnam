@@ -19,7 +19,7 @@ import { FileUploadDto_product } from './dto/upload.dto';
 
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+// @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("SanPham")
 @Controller('api/product/')
 export class ProductController {
@@ -30,7 +30,7 @@ export class ProductController {
   //            GET ALL PRODUCTS
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-all-product")
   getAllProducts(@Res() res: Response) {
     return this.productService.getAllProducts(res)
@@ -40,7 +40,7 @@ export class ProductController {
   //          GET NAME PRODUCT BY ID
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-product-by-id/:productID")
   getProductById(@Param("productID") productID: number, @Res() res: Response) {
     return this.productService.getProductById(productID, res)
@@ -50,7 +50,7 @@ export class ProductController {
   //           GET PRODUCT BY NAME
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-product-by-name/:nameProduct")
   getNameProduct(@Param("nameProduct") nameProduct: string, @Res() res: Response) {
     return this.productService.getNameProduct(nameProduct, res)
@@ -60,7 +60,7 @@ export class ProductController {
   //        GET PANIGATION LIST PRODUCT
   // ============================================
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("get-panigation-product/:pageIndex/:pageSize")
   getPanigationProduct(
     @Param("pageIndex") pageIndex: number,
@@ -75,6 +75,7 @@ export class ProductController {
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(201)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Post("post-product")
   @UseInterceptors(FilesInterceptor("hinhAnh", 20))
@@ -89,6 +90,7 @@ export class ProductController {
   //             PUT PRODUCT INFO
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Put("put-product-info/:productID")
   putRoom(@Param("productID") productID: number, @Body() body: UpdateProductDto, @Res() res: Response) {
@@ -101,6 +103,7 @@ export class ProductController {
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Put("put-product-img/:productID")
   @UseInterceptors(FilesInterceptor("hinhAnh", 20))
@@ -116,6 +119,7 @@ export class ProductController {
   //              DELETE PRODUCT  
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Delete("delete-product/:productID")
   deleteProduct(@Param("productID") productID: number, @Res() res: Response) {
