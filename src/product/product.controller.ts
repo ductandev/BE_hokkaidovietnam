@@ -21,7 +21,7 @@ import { FileUploadDto_product } from './dto/upload.dto';
 // @UseGuards(AuthGuard("jwt"))
 // @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags("SanPham")
-@Controller('api/product/')
+@Controller('api/')
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
@@ -31,9 +31,23 @@ export class ProductController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-all-product")
+  @Get("products")
   getAllProducts(@Res() res: Response) {
     return this.productService.getAllProducts(res)
+  }
+
+  // ============================================
+  //        GET ALL PRODUCTS BY TYPE_ID
+  // ============================================ 
+  @HttpCode(200)
+  // @Roles(Role.ADMIN, Role.USER)
+  @Get("products-pagination")
+  getAllProductsByTypeId(
+    @Query("typeID") typeID: number,
+    @Query("page") pageIndex: number,
+    @Query("limit") pageSize: number,
+    @Res() res: Response) {
+    return this.productService.getAllProductsByTypeId(typeID, pageIndex, pageSize, res)
   }
 
   // ============================================

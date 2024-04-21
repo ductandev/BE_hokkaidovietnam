@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 import { Response } from 'express';
-import { errorCode, failCode, successCode } from 'src/Config/response';
+import { errorCode, failCode, successCode, successCodeProduct } from 'src/Config/response';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -39,6 +39,74 @@ export class ProductService {
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:33 ~ ProductService ~ getAllProducts ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
+  //        GET ALL PRODUCTS BY TYPE_ID
+  // ============================================ 
+  async getAllProductsByTypeId(typeID: number, pageIndex: number, pageSize: number, res: Response) {
+    try {
+      let index = (pageIndex - 1) * pageSize;
+      if (index < 0) {
+        return failCode(res, '', 400, "pageIndex phải lớn hơn 0 !")
+      };
+
+      if (+typeID === 0) {
+        let total = await this.model.sanPham.findMany({
+          where: {
+            isDelete: false
+          }
+        });
+
+        if (total.length === 0) {
+          return successCode(res, total, 200, "Chưa có sản phẩm nào được thêm vào dữ liệu")
+        }
+
+        let data = await this.model.sanPham.findMany({
+          skip: +index,     // Sử dụng skip thay vì offset
+          take: +pageSize,  // Sử dụng take thay vì limit
+          where: {
+            isDelete: false
+          }
+        });
+
+        if (data.length === 0) {
+          return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu sản phẩm được tìm thấy")
+        }
+
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+      }
+
+      let total = await this.model.sanPham.findMany({
+        where: {
+          loai_san_pham_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu sản phẩm được tìm thấy !")
+      }
+
+      let data = await this.model.sanPham.findMany({
+        skip: +index,     // Sử dụng skip thay vì offset
+        take: +pageSize,  // Sử dụng take thay vì limit
+        where: {
+          loai_san_pham_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
+      }
+
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -114,7 +182,7 @@ export class ProductService {
       });
 
       if (data.length === 0) {
-        return successCode(res, data, 200, "Không có dữ liệu sản phẩm nào được tìm thấy !")
+        return successCode(res, data, 200, "Không có dữ liệu sản phẩm được tìm thấy !")
       }
 
       successCode(res, data, 200, "Thành công !")

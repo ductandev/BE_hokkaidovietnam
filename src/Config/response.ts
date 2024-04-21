@@ -7,6 +7,15 @@ const successCode = (res, content, statusCode, message) => {
         date: new Date()
     })
 }
+const successCodeProduct = (res, content, statusCode, total, message) => {
+    res.status(statusCode).json({       // res.status(200) thiết lập mã trạng thái của phản hồi HTTP
+        message,
+        statusCode,
+        content,
+        total,
+        date: new Date()
+    })
+}
 
 // fail => 400, 401, 404
 const failCode = (res, content, statusCode, message) => {
@@ -29,6 +38,7 @@ const errorCode = (res, message) => {
 
 export {
     successCode,
+    successCodeProduct,
     failCode,
     errorCode,
 }
