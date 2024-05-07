@@ -24,108 +24,109 @@ import { Response } from 'express';
 @Controller('api/user')
 export class UserController {
 
-  constructor(private readonly userService: UserService,) { }
+    constructor(private readonly userService: UserService,) { }
 
 
-  // ============================================
-  // LẤY THÔNG TIN CHI TIẾT TẤT CẢ NGƯỜI DÙNG
-  // ============================================
-  @HttpCode(200)
-  @Roles(Role.ADMIN)
-  @Get("get-info-all-user")
-  getInforAllUser(@Res() res: Response) {
-    return this.userService.getInforAllUser(res)
-  }
-
-  // ============================================
-  // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
-  // ============================================
-  @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
-  @Get("get-info-user-by-user-id/:userId")
-  getInfoUserByUserId(@Param("userId") userId: string, @Res() res: Response) {
-    return this.userService.getInfoUserByUserId(userId, res)
-  }
-
-  // ============================================
-  //    LẤY DANH SÁCH NGƯỜI DÙNG PHÂN TRANG
-  // ============================================
-  @HttpCode(200)
-  @Roles(Role.ADMIN)
-  // @Get("get-list-user-pagination/:pageIndex/:pageSize")
-  @Get("get-list-user-pagination")
-  getListUserPanigation(
-    @Query("page") pageIndex: number,
-    @Query("limit") pageSize: number,
-    @Res() res: Response
-  ) {
-    return this.userService.getListUserPanigation(pageIndex, pageSize, res)
-  }
-
-  // ============================================
-  //        TÌM TÊN NGƯỜI DÙNG THEO TÊN
-  // ============================================ 
-  @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
-  @Get("search-user-by-name/:userName")
-  searchUserByName(@Param("userName") userName: string, @Res() res: Response) {
-    return this.userService.searchUserByName(userName, res)
-  }
+    // ============================================
+    // LẤY THÔNG TIN CHI TIẾT TẤT CẢ NGƯỜI DÙNG
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN)
+    @Get("/")
+    getInforAllUser(@Res() res: Response) {
+        return this.userService.getInforAllUser(res)
+    }
 
 
-  // ============================================
-  //      CẬP NHẬT ẢNH ĐẠI DIỆN NGƯỜI DÙNG
-  // ============================================
-  @ApiConsumes('multipart/form-data')
-  @HttpCode(201)
-  @Roles(Role.ADMIN, Role.USER)
-  @Post("upload-avatar/:userID")
-  @UseInterceptors(FileInterceptor("hinhAnh"))     // Tham số 1: key FE gửi lên
+    // ============================================
+    //    LẤY DANH SÁCH NGƯỜI DÙNG PHÂN TRANG
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN)
+    @Get("/pagination")
+    getListUserPanigation(
+        @Query("page") pageIndex: number,
+        @Query("limit") pageSize: number,
+        @Res() res: Response
+    ) {
+        return this.userService.getListUserPanigation(pageIndex, pageSize, res)
+    }
 
-  // ************* CÁCH DƯỚI NÀY ĐỂ UPLOAD LƯU VÀO LOCAL SOURCE BE ***************
-  // @UseInterceptors(FileInterceptor("hinhAnh",     // Tham số 1: key FE gửi lên
-  //   {                                             // Tham số 2: định nghĩa nơi lưu, và lưu tên mới cho file
-  //     storage: diskStorage({
-  //       destination: process.cwd() + "/public/img",
-  //       filename: (req, file, callback) => callback(null, new Date().getTime() + "_" + file.originalname) // null: tham số báo lỗi
-  //     })
-  //   }
-  // ))    // Sử dụng một middleware, cho phép chèn phía trước khi truy cập API
-
-  uploadImg(
-    @UploadedFile() file: Express.Multer.File,
-    @Param("userID") userID: number,
-    @Body() body: FileUploadDto_user,
-    @Res() res: Response) {
-
-    return this.userService.uploadImg(file, userID, body, res)
-  }
-
-  // ============================================
-  //             CẬP NHẬT NGƯỜI DÙNG 
-  // ============================================  
-  @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
-  @Put("update-user/:userId")
-  updateUserById(@Param("userId") userId: string, @Body() body: UserUpdateDto, @Res() res: Response) {
-    return this.userService.updateUserById(userId, body, res)
-  }
-
-  // ============================================
-  //               XÓA NGƯỜI DÙNG 
-  // ============================================  
-  @HttpCode(200)
-  @Roles(Role.ADMIN)
-  @Delete("delete-user/:userId")
-  deleteUserById(@Param("userId") userId: string, @Res() res: Response) {
-    return this.userService.deleteUserById(userId, res)
-  }
+    // ============================================
+    // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN, Role.USER)
+    @Get("/:id")
+    getInfoUserByUserId(@Param("id") id: number, @Res() res: Response) {
+        return this.userService.getInfoUserByUserId(id, res)
+    }
 
 
+    // ============================================
+    //        TÌM TÊN NGƯỜI DÙNG THEO TÊN
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN, Role.USER)
+    @Get("name/:name")
+    searchUserByName(@Param("name") name: string, @Res() res: Response) {
+        return this.userService.searchUserByName(name, res)
+    }
 
-  // Cách lấy biến môi trường nestjs
-  // @Get("/get-dotenv")
-  // getEnv() {
-  //   return this.configService.get("TITLE")
-  // }
+
+    // ============================================
+    //      CẬP NHẬT ẢNH ĐẠI DIỆN NGƯỜI DÙNG
+    // ============================================
+    @ApiConsumes('multipart/form-data')
+    @HttpCode(201)
+    @Roles(Role.ADMIN, Role.USER)
+    @Post("upload-avatar/:id")
+    @UseInterceptors(FileInterceptor("hinh_anh"))     // Tham số 1: key FE gửi lên
+
+    // ************* CÁCH DƯỚI NÀY ĐỂ UPLOAD LƯU VÀO LOCAL SOURCE BE ***************
+    // @UseInterceptors(FileInterceptor("hinhAnh",     // Tham số 1: key FE gửi lên
+    //   {                                             // Tham số 2: định nghĩa nơi lưu, và lưu tên mới cho file
+    //     storage: diskStorage({
+    //       destination: process.cwd() + "/public/img",
+    //       filename: (req, file, callback) => callback(null, new Date().getTime() + "_" + file.originalname) // null: tham số báo lỗi
+    //     })
+    //   }
+    // ))    // Sử dụng một middleware, cho phép chèn phía trước khi truy cập API
+
+    uploadImg(
+        @UploadedFile() file: Express.Multer.File,
+        @Param("id") id: number,
+        @Body() body: FileUploadDto_user,
+        @Res() res: Response) {
+
+        return this.userService.uploadImg(file, id, body, res)
+    }
+
+    // ============================================
+    //             CẬP NHẬT NGƯỜI DÙNG
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN, Role.USER)
+    @Put("update/:id")
+    updateUserById(@Param("id") id: string, @Body() body: UserUpdateDto, @Res() res: Response) {
+        return this.userService.updateUserById(id, body, res)
+    }
+
+    // ============================================
+    //               XÓA NGƯỜI DÙNG
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN)
+    @Delete("delete/:id")
+    deleteUserById(@Param("id") id: string, @Res() res: Response) {
+        return this.userService.deleteUserById(id, res)
+    }
+
+
+
+    // Cách lấy biến môi trường nestjs
+    // @Get("/get-dotenv")
+    // getEnv() {
+    //   return this.configService.get("TITLE")
+    // }
 }

@@ -44,14 +44,15 @@ export class ProductService {
   }
 
   // ============================================
-  //        GET ALL PRODUCTS BY TYPE_ID
-  // ============================================ 
-  async getAllProductsByTypeId(typeID: number, pageIndex: number, pageSize: number, res: Response) {
+  // GET ALL PRODUCTS PAGINATION BY TYPE_ID SEARCH
+  // ============================================
+  async getAllProductsByTypeId(typeID: number, pageIndex: number, pageSize: number, search: string, res: Response) {
     try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
+
       let index = (pageIndex - 1) * pageSize;
-      if (index < 0) {
-        return failCode(res, '', 400, "pageIndex phải lớn hơn 0 !")
-      };
 
       if (+typeID === 0) {
         let total = await this.model.sanPham.findMany({
@@ -68,6 +69,9 @@ export class ProductService {
           skip: +index,     // Sử dụng skip thay vì offset
           take: +pageSize,  // Sử dụng take thay vì limit
           where: {
+            ten_san_pham: {
+              contains: search   // LIKE '%nameProduct%'
+            },
             isDelete: false
           }
         });
@@ -94,6 +98,9 @@ export class ProductService {
         skip: +index,     // Sử dụng skip thay vì offset
         take: +pageSize,  // Sử dụng take thay vì limit
         where: {
+          ten_san_pham: {
+            contains: search   // LIKE '%nameProduct%'
+          },
           loai_san_pham_id: +typeID,
           isDelete: false
         }
@@ -112,7 +119,7 @@ export class ProductService {
   }
 
   // ============================================
-  //           GET NAME PRODUCT BY ID
+  //           GET PRODUCT BY ID
   // ============================================ 
   async getProductById(productID: number, res: Response) {
     try {
@@ -164,42 +171,22 @@ export class ProductService {
 
 
   // ============================================
-  //         GET PANIGATION LIST PRODUCT
-  // ============================================
-  async getPanigationProduct(pageIndex: number, pageSize: number, res: Response) {
-    try {
-      let index = (pageIndex - 1) * pageSize;
-      if (index < 0) {
-        return failCode(res, '', 400, "pageIndex phải lớn hơn 0 !")
-      };
-
-      let data = await this.model.sanPham.findMany({
-        skip: +index,     // Sử dụng skip thay vì offset
-        take: +pageSize,  // Sử dụng take thay vì limit
-        where: {
-          isDelete: false,
-        }
-      });
-
-      if (data.length === 0) {
-        return successCode(res, data, 200, "Không có dữ liệu sản phẩm được tìm thấy !")
-      }
-
-      successCode(res, data, 200, "Thành công !")
-    }
-    catch (exception) {
-      console.log("🚀 ~ file: product.service.ts:123 ~ ProductService ~ getPanigationRoom ~ exception:", exception);
-      errorCode(res, "Lỗi BE")
-    }
-  }
-
-
-  // ============================================
   //                POST PRODUCT  
   // ============================================
   async postProduct(files: Express.Multer.File[], body: CreateProductDto, res: Response) {
     try {
-      let { loai_san_pham_id, ten_san_pham, gia_ban, gia_giam, mo_ta_chi_tiet, don_vi_tinh, so_luong_trong_kho } = body;
+      let {
+        loai_san_pham_id,
+        ten_san_pham,
+        gia_ban,
+        gia_giam,
+        mo_ta,
+        thong_tin_chi_tiet,
+        don_vi_tinh,
+        trang_thai_san_pham = true,
+        so_luong_trong_kho,
+        san_pham_noi_bat = false,
+        san_pham_lien_quan = [] } = body;
 
       let data = await this.model.sanPham.findFirst({
         where: {
@@ -231,15 +218,23 @@ export class ProductService {
       // ************************ END *****************************
 
 
+      if (typeof san_pham_lien_quan === 'string') {
+        san_pham_lien_quan = JSON.parse(san_pham_lien_quan);
+      }
+
       let newData = await this.model.sanPham.create({
         data: {
           loai_san_pham_id: +loai_san_pham_id,
           ten_san_pham,
           gia_ban: +gia_ban,
           gia_giam: +gia_giam,
-          mo_ta_chi_tiet,
+          mo_ta,
+          thong_tin_chi_tiet,
           don_vi_tinh,
+          trang_thai_san_pham: Boolean(trang_thai_san_pham),
           so_luong_trong_kho: +so_luong_trong_kho,
+          san_pham_noi_bat: Boolean(san_pham_noi_bat),
+          san_pham_lien_quan,
           hinh_anh: dataCloudinaryArray.map(item => item.url),        // Lấy ra array URL
         }
       })

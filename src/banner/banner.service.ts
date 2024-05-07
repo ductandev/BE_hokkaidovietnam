@@ -18,7 +18,7 @@ export class BannerService {
   model = new PrismaClient();
 
   // ============================================
-  //            GET ALL BANNER
+  //                GET ALL BANNER
   // ============================================ 
   async getAllBanner(res: Response) {
     try {
@@ -41,38 +41,14 @@ export class BannerService {
   }
 
   // ============================================
-  //           GET NAME BANNER BY ID
-  // ============================================ 
-  async getBannerById(bannerID: number, res: Response) {
-    try {
-      let data = await this.model.banner.findFirst({
-        where: {
-          banner_id: +bannerID,
-          isDelete: false
-        }
-      });
-
-      if (data === null) {
-        return failCode(res, data, 400, "Banner ID không tồn tại hoặc đã được xóa trước đó !")
-      }
-
-      successCode(res, data, 200, "Thành công")
-    }
-    catch (exception) {
-      console.log("🚀 ~ file: banner.service.ts:62 ~ BannerService ~ getBannerById ~ exception:", exception);
-      errorCode(res, "Lỗi BE")
-    }
-  }
-
-  // ============================================
   //        GET PANIGATION LIST BANNER
   // ============================================
   async getPanigationBanner(pageIndex: number, pageSize: number, res: Response) {
     try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
       let index = (pageIndex - 1) * pageSize;
-      if (index < 0) {
-        return failCode(res, '', 400, "PageIndex phải lớn hơn 0 !")
-      };
 
       let data = await this.model.banner.findMany({
         skip: +index,     // Sử dụng skip thay vì offset
@@ -90,6 +66,30 @@ export class BannerService {
     }
     catch (exception) {
       console.log("🚀 ~ file: banner.service.ts:92 ~ BannerService ~ getPanigationBanner ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
+  //           GET BANNER BY ID
+  // ============================================ 
+  async getBannerById(id: number, res: Response) {
+    try {
+      let data = await this.model.banner.findFirst({
+        where: {
+          banner_id: +id,
+          isDelete: false
+        }
+      });
+
+      if (data === null) {
+        return failCode(res, data, 400, "Banner ID không tồn tại hoặc đã được xóa trước đó !")
+      }
+
+      successCode(res, data, 200, "Thành công")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: banner.service.ts:62 ~ BannerService ~ getBannerById ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -149,7 +149,7 @@ export class BannerService {
       await this.model.banner.create({
         data: {
           // ten_hinh_anh: dataCloudinaryArray.map(item => item.url),        // Lấy ra array URL
-          ten_hinh_anh: dataCloudinary.url
+          url_banner: dataCloudinary.url
         },
       });
 
@@ -164,7 +164,7 @@ export class BannerService {
   // ============================================
   //           PUT UPLOAD IMG BANNER
   // ============================================
-  async putImgBanner(file: Express.Multer.File, bannerID: number, body: FileUploadDto_banner, res: Response) {
+  async putImgBanner(file: Express.Multer.File, id: number, body: FileUploadDto_banner, res: Response) {
     try {
       let { email } = body
 
@@ -185,7 +185,7 @@ export class BannerService {
 
       let checkBannerID = await this.model.banner.findFirst({
         where: {
-          banner_id: +bannerID,
+          banner_id: +id,
           isDelete: false
         },
       });
@@ -210,11 +210,11 @@ export class BannerService {
 
       await this.model.banner.update({
         where: {
-          banner_id: +bannerID,
+          banner_id: +id,
           isDelete: false
         },
         data: {
-          ten_hinh_anh: dataCloudinary.url        // Lấy ra array URL
+          url_banner: dataCloudinary.url        // Lấy ra array URL
         },
       });
 
@@ -229,11 +229,11 @@ export class BannerService {
   // ============================================
   //                DELETE IMG BANNER
   // ============================================
-  async deleteBanner(bannerID: number, res: Response) {
+  async deleteBanner(id: number, res: Response) {
     try {
       let checkBannerID = await this.model.banner.findFirst({
         where: {
-          banner_id: +bannerID,
+          banner_id: +id,
           isDelete: false
         }
       });
@@ -244,7 +244,7 @@ export class BannerService {
 
       await this.model.banner.update({
         where: {
-          banner_id: +bannerID
+          banner_id: +id
         },
         data: {
           isDelete: true

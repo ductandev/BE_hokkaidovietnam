@@ -16,7 +16,7 @@ export class AuthController {
   //                  ĐĂNG NHẬP
   // =============================================
   @HttpCode(200)
-  @Post("/signin")
+  @Post("/sign-in")
   signIn(@Body() body: UserSignInDto, @Res() res: Response) {
     return this.authService.signIn(body, res);
   }
@@ -25,8 +25,11 @@ export class AuthController {
   //                  ĐĂNG KÝ
   // =============================================
   @HttpCode(201)
-  @Post("/signup")
+  @Post("/sign-up")
   signUp(@Body() body: UserSignUpType, @Res() res: Response) {
+    // Việc validation sẽ được thực hiện tự động trước khi hàm này được gọi
+    // Nếu dữ liệu không hợp lệ, NestJS sẽ tự động trả về response lỗi
+    // Nếu dữ liệu hợp lệ, createUserDto sẽ chứa dữ liệu được validate
     return this.authService.signUp(body, res);
   }
 

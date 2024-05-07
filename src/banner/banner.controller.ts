@@ -26,19 +26,9 @@ export class BannerController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-all-banner")
+  @Get("/")
   getAllBanner(@Res() res: Response) {
     return this.bannerService.getAllBanner(res)
-  }
-
-  // ============================================
-  //           GET NAME BANNER BY ID
-  // ============================================ 
-  @HttpCode(200)
-  // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-banner-by-id/:bannerID")
-  getBannerById(@Param("bannerID") bannerID: number, @Res() res: Response) {
-    return this.bannerService.getBannerById(bannerID, res)
   }
 
   // ============================================
@@ -47,7 +37,7 @@ export class BannerController {
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
   // @Get("get-pagination-banner/:pageIndex/:pageSize")
-  @Get("get-pagination-banner")
+  @Get("pagination")
   getPanigationBanner(
     @Query("page") pageIndex: number,
     @Query("limit") pageSize: number,
@@ -57,14 +47,24 @@ export class BannerController {
   }
 
   // ============================================
+  //           GET NAME BANNER BY ID
+  // ============================================ 
+  @HttpCode(200)
+  // @Roles(Role.ADMIN, Role.USER)
+  @Get("/:id")
+  getBannerById(@Param("id") id: number, @Res() res: Response) {
+    return this.bannerService.getBannerById(id, res)
+  }
+
+  // ============================================
   //           POST UPLOAD IMG BANNER
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(201)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Post("post-banner")
-  @UseInterceptors(FileInterceptor("hinhAnh"))
+  @Post("/")
+  @UseInterceptors(FileInterceptor("hinh_anh"))
 
   postImgBanner(
     @UploadedFile() file: Express.Multer.File,
@@ -74,7 +74,6 @@ export class BannerController {
     return this.bannerService.postImgBanner(file, body, res)
   }
 
-
   // ============================================
   //           PUT UPLOAD IMG BANNER
   // ============================================
@@ -82,18 +81,17 @@ export class BannerController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Put("put-banner/:bannerID")
-  @UseInterceptors(FileInterceptor("hinhAnh"))
+  @Put("/:id")
+  @UseInterceptors(FileInterceptor("hinh_anh"))
 
   putImgBanner(
     @UploadedFile() file: Express.Multer.File,
-    @Param("bannerID") bannerID: number,
+    @Param("id") id: number,
     @Body() body: FileUploadDto_banner,
     @Res() res: Response) {
 
-    return this.bannerService.putImgBanner(file, bannerID, body, res)
+    return this.bannerService.putImgBanner(file, id, body, res)
   }
-
 
   // ============================================
   //                DELETE IMG BANNER
@@ -101,9 +99,9 @@ export class BannerController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Delete("delete-banner/:bannerID")
-  deleteBanner(@Param("bannerID") bannerID: number, @Res() res: Response) {
-    return this.bannerService.deleteBanner(bannerID, res)
+  @Delete("/:id")
+  deleteBanner(@Param("id") id: number, @Res() res: Response) {
+    return this.bannerService.deleteBanner(id, res)
   }
 
 

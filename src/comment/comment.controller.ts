@@ -27,7 +27,7 @@ export class CommentController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN)
-  @Get("get-all-comment")
+  @Get("/")
   getAllComment(@Res() res: Response) {
     return this.commentService.getAllComment(res)
   }
@@ -38,7 +38,7 @@ export class CommentController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-all-comment-by-user-id/:userID")
+  @Get("/:userID")
   getCommentByUserId(@Param("userID") userID: number, @Res() res: Response) {
     return this.commentService.getCommentByUserId(userID, res)
   }
@@ -49,7 +49,7 @@ export class CommentController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-all-comment-by-product-id/:productID")
+  @Get("product/:productID")
   getCommentByProductId(@Param("productID") productID: number, @Res() res: Response) {
     return this.commentService.getCommentByProductId(productID, res)
   }
@@ -61,7 +61,7 @@ export class CommentController {
   @HttpCode(201)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Post("post-comment")
+  @Post("/")
   postComment(@Body() body: CreateCommentDto, @Res() res: Response) {
     return this.commentService.postComment(body, res)
   }
@@ -73,7 +73,7 @@ export class CommentController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Put("put-comment/:commentID")
+  @Put("/:commentID")
   putComment(@Param("commentID") commentID: number, @Body() body: CreateCommentDto, @Res() res: Response) {
     return this.commentService.putComment(commentID, body, res)
   }
@@ -85,7 +85,7 @@ export class CommentController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Delete("delete-comment/:commentID")
+  @Delete("/:commentID")
   deleteComment(@Param("commentID") commentID: number, @Res() res: Response) {
     return this.commentService.deleteComment(commentID, res)
   }

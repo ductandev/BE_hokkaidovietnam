@@ -36,64 +36,14 @@ export class ProductTypeService {
   }
 
   // ============================================
-  //       GET NAME PRODUCT TYPE BY ID
-  // ============================================ 
-  async getProductTypeById(productTypeID: number, res: Response) {
-    try {
-      let data = await this.model.loaiSanPham.findFirst({
-        where: {
-          loai_san_pham_id: +productTypeID,
-          isDelete: false
-        }
-      });
-
-      if (data === null) {
-        return failCode(res, '', 404, "Loại sản phẩm ID không tồn tại")
-      }
-
-      successCode(res, data, 200, "Thành công !")
-    }
-    catch (exception) {
-      console.log("🚀 ~ file: product-type.service.ts:57 ~ ProductTypeService ~ getProductTypeById ~ exception:", exception);
-      errorCode(res, "Lỗi BE")
-    }
-  }
-
-  // ============================================
-  //       GET PRODUCT TYPE BY NAME
-  // ============================================ 
-  async getNameProductType(nameProductType: string, res: Response) {
-    try {
-      let data = await this.model.loaiSanPham.findMany({
-        where: {
-          ten_loai_san_pham: {
-            contains: nameProductType   // LIKE '%nameProductType%'
-          },
-          isDelete: false
-        }
-      });
-
-      if (data.length === 0) {
-        return successCode(res, data, 200, "Không có dữ liệu kết quả tìm kiếm !")
-      }
-
-      successCode(res, data, 200, "Thành công !")
-    }
-    catch (exception) {
-      console.log("🚀 ~ file: product-type.service.ts:83 ~ ProductTypeService ~ getNameProductType ~ exception:", exception);
-      errorCode(res, "Lỗi BE !")
-    }
-  }
-
-  // ============================================
   //      GET PANIGATION LIST PRODUCT TYPE
   // ============================================
   async getPanigationProductType(pageIndex: number, pageSize: number, res: Response) {
     try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
       let index = (pageIndex - 1) * pageSize;
-      if (index < 0) {
-        return failCode(res, '', 400, "PageIndex phải lớn hơn 0 !")
-      };
 
       let data = await this.model.loaiSanPham.findMany({
         skip: +index,     // Sử dụng skip thay vì offset
@@ -116,15 +66,61 @@ export class ProductTypeService {
   }
 
   // ============================================
+  //       GET NAME PRODUCT TYPE BY ID
+  // ============================================ 
+  async getProductTypeById(id: number, res: Response) {
+    try {
+      let data = await this.model.loaiSanPham.findFirst({
+        where: {
+          loai_san_pham_id: +id,
+          isDelete: false
+        }
+      });
+
+      if (data === null) {
+        return failCode(res, '', 404, "Loại sản phẩm ID không tồn tại")
+      }
+
+      successCode(res, data, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product-type.service.ts:57 ~ ProductTypeService ~ getProductTypeById ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
+  //       GET PRODUCT TYPE BY NAME
+  // ============================================ 
+  async getNameProductType(name: string, res: Response) {
+    try {
+      let data = await this.model.loaiSanPham.findMany({
+        where: {
+          ten_loai_san_pham: {
+            contains: name   // LIKE '%nameProductType%'
+          },
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCode(res, data, 200, "Không có dữ liệu kết quả tìm kiếm !")
+      }
+
+      successCode(res, data, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product-type.service.ts:83 ~ ProductTypeService ~ getNameProductType ~ exception:", exception);
+      errorCode(res, "Lỗi BE !")
+    }
+  }
+
+  // ============================================
   //            POST PRODUCT TYPE 
   // ============================================
   async postProductType(body: CreateProductTypeDto, res: Response) {
     try {
       let { ten_loai_san_pham } = body;
-
-      if (ten_loai_san_pham === undefined) {
-        return failCode(res, "", 400, "Dữ liệu đầu vào không đúng định dạng !")
-      }
 
       let data = await this.model.loaiSanPham.findFirst({
         where: {
@@ -152,17 +148,11 @@ export class ProductTypeService {
   // ============================================
   //             PUT PRODUCT TYPE 
   // ============================================
-  async putProductType(productTypeID: number, body: CreateProductTypeDto, res: Response) {
+  async putProductType(id: number, body: CreateProductTypeDto, res: Response) {
     try {
-      let { ten_loai_san_pham } = body;
-
-      if (ten_loai_san_pham === undefined) {
-        return failCode(res, "", 400, "Dữ liệu đầu vào không đúng định dạng !")
-      }
-
       let data = await this.model.loaiSanPham.findFirst({
         where: {
-          loai_san_pham_id: +productTypeID,
+          loai_san_pham_id: +id,
           isDelete: false
         }
       });
@@ -173,7 +163,7 @@ export class ProductTypeService {
 
       let newData = await this.model.loaiSanPham.update({
         where: {
-          loai_san_pham_id: +productTypeID,
+          loai_san_pham_id: +id,
         },
         data: body
       })
@@ -189,11 +179,11 @@ export class ProductTypeService {
   // ============================================
   //            DELETE PRODUCT TYPE 
   // ============================================
-  async deleteProductType(productTypeID: number, res: Response) {
+  async deleteProductType(id: number, res: Response) {
     try {
       let data = await this.model.loaiSanPham.findFirst({
         where: {
-          loai_san_pham_id: +productTypeID,
+          loai_san_pham_id: +id,
           isDelete: false
         }
       });
@@ -205,7 +195,7 @@ export class ProductTypeService {
 
       await this.model.loaiSanPham.update({
         where: {
-          loai_san_pham_id: +productTypeID
+          loai_san_pham_id: +id
         },
         data: {
           isDelete: true

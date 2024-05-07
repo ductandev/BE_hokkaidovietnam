@@ -26,29 +26,9 @@ export class ProductTypeController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-all-product-type")
+  @Get("/")
   getAllProductType(@Res() res: Response) {
     return this.productTypeService.getAllProductType(res)
-  }
-
-  // ============================================
-  //       GET NAME PRODUCT TYPE BY ID
-  // ============================================ 
-  @HttpCode(200)
-  // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-product-type-by-id/:productTypeID")
-  getProductTypeById(@Param("productTypeID") productTypeID: number, @Res() res: Response) {
-    return this.productTypeService.getProductTypeById(productTypeID, res)
-  }
-
-  // ============================================
-  //       GET PRODUCT TYPE BY NAME
-  // ============================================ 
-  @HttpCode(200)
-  // @Roles(Role.ADMIN, Role.USER)
-  @Get("get-product-type-by-name/:nameProductType")
-  getNameProductType(@Param("nameProductType") nameProductType: string, @Res() res: Response) {
-    return this.productTypeService.getNameProductType(nameProductType, res)
   }
 
   // ============================================
@@ -57,7 +37,7 @@ export class ProductTypeController {
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
   // @Get("get-pagination-product-type/:pageIndex/:pageSize")
-  @Get("get-pagination-product-type")
+  @Get("pagination")
   getPanigationProductType(
     @Query("page") pageIndex: number,
     @Query("limit") pageSize: number,
@@ -67,12 +47,32 @@ export class ProductTypeController {
   }
 
   // ============================================
+  //       GET NAME PRODUCT TYPE BY ID
+  // ============================================ 
+  @HttpCode(200)
+  // @Roles(Role.ADMIN, Role.USER)
+  @Get("/:id")
+  getProductTypeById(@Param("id") id: number, @Res() res: Response) {
+    return this.productTypeService.getProductTypeById(id, res)
+  }
+
+  // ============================================
+  //       GET PRODUCT TYPE BY NAME
+  // ============================================ 
+  @HttpCode(200)
+  // @Roles(Role.ADMIN, Role.USER)
+  @Get("name/:name")
+  getNameProductType(@Param("name") name: string, @Res() res: Response) {
+    return this.productTypeService.getNameProductType(name, res)
+  }
+
+  // ============================================
   //            POST PRODUCT TYPE 
   // ============================================
   @HttpCode(201)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Post("post-product-type")
+  @Post("/")
   postProductType(@Body() body: CreateProductTypeDto, @Res() res: Response) {
     return this.productTypeService.postProductType(body, res)
   }
@@ -83,9 +83,9 @@ export class ProductTypeController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Put("put-product-type/:productTypeID")
-  putProductType(@Param("productTypeID") productTypeID: number, @Body() body: CreateProductTypeDto, @Res() res: Response) {
-    return this.productTypeService.putProductType(productTypeID, body, res)
+  @Put("/:id")
+  putProductType(@Param("id") id: number, @Body() body: CreateProductTypeDto, @Res() res: Response) {
+    return this.productTypeService.putProductType(id, body, res)
   }
 
   // ============================================
@@ -94,11 +94,9 @@ export class ProductTypeController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Delete("delete-product-type/:productTypeID")
-  deleteProductType(@Param("productTypeID") productTypeID: number, @Res() res: Response) {
-    return this.productTypeService.deleteProductType(productTypeID, res)
+  @Delete("/:id")
+  deleteProductType(@Param("id") id: number, @Res() res: Response) {
+    return this.productTypeService.deleteProductType(id, res)
   }
-
-
 
 }

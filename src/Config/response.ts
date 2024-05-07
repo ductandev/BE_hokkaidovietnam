@@ -7,6 +7,16 @@ const successCode = (res, content, statusCode, message) => {
         date: new Date()
     })
 }
+const successCodeAuth = (res, content, token, statusCode, message) => {
+    res.status(statusCode).json({       // res.status(200) thiết lập mã trạng thái của phản hồi HTTP
+        message,
+        statusCode,
+        content,
+        token,
+        date: new Date()
+    })
+}
+
 const successCodeProduct = (res, content, statusCode, total, message) => {
     res.status(statusCode).json({       // res.status(200) thiết lập mã trạng thái của phản hồi HTTP
         message,
@@ -38,6 +48,7 @@ const errorCode = (res, message) => {
 
 export {
     successCode,
+    successCodeAuth,
     successCodeProduct,
     failCode,
     errorCode,
