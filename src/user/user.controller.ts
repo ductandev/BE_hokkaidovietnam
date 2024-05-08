@@ -43,14 +43,23 @@ export class UserController {
     // ============================================
     @HttpCode(200)
     @Roles(Role.ADMIN)
-    @Get("/pagination")
+    @Get('pagination')
     getListUserPanigation(
-        @Query("page") pageIndex: number,
-        @Query("limit") pageSize: number,
-        @Res() res: Response
+        @Query('vaiTroID') vaiTroID: number,
+        @Query('page') pageIndex: number,
+        @Query('limit') pageSize: number,
+        @Query('search') search: string,
+        @Res() res: Response,
     ) {
-        return this.userService.getListUserPanigation(pageIndex, pageSize, res)
+        return this.userService.getListUserPanigation(
+            vaiTroID,
+            pageIndex,
+            pageSize,
+            search,
+            res,
+        );
     }
+
 
     // ============================================
     // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID

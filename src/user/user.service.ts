@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { errorCode, failCode, successCode } from 'src/Config/response';
+import { errorCode, failCode, successCode, successCodeProduct } from 'src/Config/response';
 // THƯ VIỆN MÃ HÓA PASSWORD
 // yarn add bcrypt
 import * as bcrypt from 'bcrypt';
@@ -32,6 +32,13 @@ export class UserService {
                 where: {
                     isDelete: false
                 }
+                // ,include: {
+                //     DonHang: {
+                //         include: {
+                //             ChiTietDonHang: true
+                //         }
+                //     }
+                // }
             });
 
             if (data.length === 0) {
@@ -50,30 +57,94 @@ export class UserService {
     // ============================================
     //    LẤY DANH SÁCH NGƯỜI DÙNG PHÂN TRANG
     // ============================================
-    async getListUserPanigation(pageIndex: number, pageSize: number, res: Response) {
+    async getListUserPanigation(vaiTroID: number, pageIndex: number, pageSize: number, search: string, res: Response) {
         try {
             if (pageIndex <= 0 || pageSize <= 0) {
                 return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
             }
-            // 1, 2, 3
-            let index = (pageIndex - 1) * pageSize;  // =>0, 3, 6, 9
+
+            let index = (pageIndex - 1) * pageSize;
+
+            if (+vaiTroID === 0) {
+                let total = await this.model.nguoiDung.findMany({
+                    where: {
+                        ho_ten: {
+                            contains: search   // LIKE '%nameProduct%'
+                        },
+                        isDelete: false
+                    }
+                });
+
+                if (total.length === 0) {
+                    return successCode(res, total, 200, "Chưa có người dùng nào được thêm vào dữ liệu")
+                }
+
+                let data = await this.model.nguoiDung.findMany({
+                    skip: +index,     // Sử dụng skip thay vì offset
+                    take: +pageSize,  // Sử dụng take thay vì limit
+                    where: {
+                        ho_ten: {
+                            contains: search   // LIKE '%nameProduct%'
+                        },
+                        isDelete: false
+                    },
+                    include: {
+                        DonHang: {
+                            include: {
+                                ChiTietDonHang: true
+                            }
+                        }
+                    }
+                });
+
+                if (data.length === 0) {
+                    return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu người dùng được tìm thấy")
+                }
+
+                return successCodeProduct(res, data, 200, total.length, "Thành công !")
+            }
+
+            let total = await this.model.nguoiDung.findMany({
+                where: {
+                    vai_tro_id: +vaiTroID,
+                    ho_ten: {
+                        contains: search   // LIKE '%nameProduct%'
+                    },
+                    isDelete: false
+                }
+            });
+
+            if (total.length === 0) {
+                return successCode(res, total, 200, "Không có dữ liệu người dùng được tìm thấy !")
+            }
 
             let data = await this.model.nguoiDung.findMany({
                 skip: +index,     // Sử dụng skip thay vì offset
                 take: +pageSize,  // Sử dụng take thay vì limit
                 where: {
-                    isDelete: false,
+                    ho_ten: {
+                        contains: search   // LIKE '%nameProduct%'
+                    },
+                    vai_tro_id: +vaiTroID,
+                    isDelete: false
+                },
+                include: {
+                    DonHang: {
+                        include: {
+                            ChiTietDonHang: true
+                        }
+                    }
                 }
             });
 
             if (data.length === 0) {
-                return successCode(res, data, 200, "Chưa có dữ liệu người dùng nào được thêm !")
+                return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
             }
 
-            successCode(res, data, 200, "Thành công !")
+            successCodeProduct(res, data, 200, total.length, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:76 ~ UserService ~ getListUserPanigation ~ exception:", exception);
+            console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
