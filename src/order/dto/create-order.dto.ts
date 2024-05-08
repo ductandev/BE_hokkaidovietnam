@@ -1,9 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { IsString, IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
 
-export class UserSignUpType {
-    nguoi_dung_id: number;
-    vai_tro_id: number;
+export class CreateOrderDto {
+    @IsNotEmpty({ message: 'Email không được bỏ trống !' })
+    @IsEmail()
+    @ApiProperty()
+    email: string;
 
     @IsNotEmpty({ message: 'Họ tên không được bỏ trống !' })
     @IsString()
@@ -11,36 +13,38 @@ export class UserSignUpType {
     @ApiProperty()
     ho_ten: string;
 
-    @IsNotEmpty({ message: 'Email không được bỏ trống !' })
-    @IsEmail()
-    @ApiProperty()
-    email: string;
-
-    @IsNotEmpty({ message: 'mật khẩu không được bỏ trống !' })
-    @IsString()
-    @Length(6, 32, { message: 'Mật khẩu phải từ 6 đến 32 ký tự.' })
-    @ApiProperty()
-    mat_khau: string;
-
-    @IsNotEmpty({ message: 'Địa chỉ không được bỏ trống !' })
-    @IsString()
-    @ApiProperty()
-    dia_chi: string;
-
     @IsNotEmpty({ message: 'Số điện thoại không được bỏ trống !' })
     @IsString()
     @Length(10, 10, { message: 'Số điện thoại phải có độ dài là 10 ký tự' })
     @ApiProperty()
     so_dien_thoai: string;
 
-    // @ApiProperty()
-    anh_dai_dien: string;
-
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Địa chỉ không được bỏ trống !' })
     @IsString()
     @ApiProperty()
-    gioi_tinh: string;
+    dia_chi: string;
+
+    @ApiProperty()
+    giao_dia_chi_khac: boolean
+
+    @ApiProperty()
+    ghi_chu: string
+
+    @ApiProperty()
+    hinh_thuc_thanh_toan_id: number
+
+    @ApiProperty()
+    san_pham: any[]
+
+    @ApiProperty()
+    tong_tien: number
+
+    @ApiProperty()
+    ma_giam_gia: string
+
+    @ApiProperty()
+    thoi_gian_dat_hang: Date
 
     // @ApiProperty()
-    isDelete: boolean;
+    // trang_thai_don_hang_id: number
 }

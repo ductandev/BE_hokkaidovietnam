@@ -19,7 +19,6 @@ export class ProductService {
 
   model = new PrismaClient();
 
-
   // ============================================
   //            GET ALL  PRODUCTS
   // ============================================ 
@@ -224,7 +223,7 @@ export class ProductService {
       // ************************ END *****************************
 
 
-      if (typeof san_pham_lien_quan === 'string') {
+      if (typeof san_pham_lien_quan === 'string' && san_pham_lien_quan !== '') {
         san_pham_lien_quan = JSON.parse(san_pham_lien_quan);
       }
 

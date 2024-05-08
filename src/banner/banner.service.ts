@@ -133,6 +133,11 @@ export class BannerService {
       // console.log(dataCloudinaryArray)
 
 
+      if (!file || !file.buffer) {
+        return failCode(res, '', 400, "Dữ liệu file không hợp lệ !");
+      }
+
+      // ⭐****************** CLOUDINARY **************************⭐
       const dataCloudinary = await new Promise<CloudinaryResponse>((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           (error, result) => {
@@ -239,7 +244,7 @@ export class BannerService {
       });
 
       if (checkBannerID === null) {
-        return failCode(res, checkBannerID, 400, "Room ID không tồn tại hoặc đã bị xóa trước đó !")
+        return failCode(res, checkBannerID, 400, "Banner ID không tồn tại hoặc đã bị xóa trước đó !")
       }
 
       await this.model.banner.update({

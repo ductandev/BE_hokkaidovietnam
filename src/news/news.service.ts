@@ -4,8 +4,12 @@ import { errorCode, failCode, successCode } from 'src/Config/response';
 
 
 import { CreateNewsDto } from './dto/create-news.dto';
-import { UpdateNewsDto } from './dto/update-news.dto';
 import { Response } from 'express';
+
+// =================CLOUDYNARY=====================
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
+import streamifier from 'streamifier';
 
 
 @Injectable()
@@ -31,7 +35,7 @@ export class NewsService {
       successCode(res, data, 200, "Thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: news.service.ts:34 ~ NewsService ~ getAllNews ~ exception:", exception);
+      console.log("🚀 ~ file: news.service.ts:39 ~ NewsService ~ getAllNews ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -41,10 +45,10 @@ export class NewsService {
   // ============================================
   async getPanigationNews(pageIndex: number, pageSize: number, res: Response) {
     try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
       let index = (pageIndex - 1) * pageSize;
-      if (index < 0) {
-        return failCode(res, '', 400, "PageIndex phải lớn hơn 0 !")
-      };
 
       let data = await this.model.tinTuc.findMany({
         skip: +index,     // Sử dụng skip thay vì offset
@@ -55,12 +59,13 @@ export class NewsService {
       });
 
       if (data.length === 0) {
-        return successCode(res, data, 200, "Không có dữ liệu Banner nào được tìm thấy !")
+        return successCode(res, data, 200, "Không có dữ liệu Tin tức nào được tìm thấy !")
       }
 
       successCode(res, data, 200, "Thành công !")
     }
     catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:69 ~ NewsService ~ getPanigationNews ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -70,189 +75,199 @@ export class NewsService {
   // ============================================ 
   async getNewsById(id: number, res: Response) {
     try {
-      let data = await this.model.banner.findFirst({
+      let data = await this.model.tinTuc.findFirst({
         where: {
-          banner_id: +id,
+          tin_tuc_id: +id,
           isDelete: false
         }
       });
 
       if (data === null) {
-        return failCode(res, data, 400, "Banner ID không tồn tại hoặc đã được xóa trước đó !")
+        return failCode(res, data, 400, "Tin tức ID không tồn tại hoặc đã được xóa trước đó !")
       }
 
       successCode(res, data, 200, "Thành công")
     }
     catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:93 ~ NewsService ~ getNewsById ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
 
-  // // ============================================
-  // //           POST UPLOAD IMG NEWS
-  // // ============================================
-  // async postImgBanner(file: Express.Multer.File, body: FileUploadDto_banner, res: Response) {
-  //   try {
-  //     let { email } = body
+  // ============================================
+  //            GET NEWS BY NAME
+  // ============================================ 
+  async getNameNews(name: string, res: Response) {
+    try {
+      let data = await this.model.tinTuc.findMany({
+        where: {
+          tieu_de: {
+            contains: name   // LIKE '%nameProduct%'
+          },
+          isDelete: false
+        }
+      });
 
-  //     if (email === undefined) {
-  //       return failCode(res, "", 400, "Dữ liệu đầu vào không đúng định dạng !")
-  //     }
+      if (data.length === 0) {
+        return successCode(res, data, 200, "Không có dữ liệu kết quả tìm kiếm !")
+      }
 
-  //     let checkUser = await this.model.nguoiDung.findFirst({
-  //       where: {
-  //         email,
-  //         isDelete: false
-  //       },
-  //     });
+      successCode(res, data, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:119 ~ NewsService ~ getNameNews ~ exception:", exception);
+      errorCode(res, "Lỗi BE !")
+    }
+  }
 
-  //     if (checkUser === null) {
-  //       return failCode(res, '', 400, "Email người dùng không tồn tại !");
-  //     }
+  // ============================================
+  //           POST UPLOAD NEWS
+  // ============================================
+  async postNews(file: Express.Multer.File, body: CreateNewsDto, res: Response) {
+    try {
+      let { tieu_de, mo_ta, noi_dung, bai_viet_lien_quan } = body
 
-  //     // ⭐****************** CLOUDINARY **************************⭐
-  //     // const uploadPromises = files.map((file) => {
-  //     //   return new Promise<CloudinaryResponse>((resolve, reject) => {
-  //     //     const uploadStream = cloudinary.uploader.upload_stream(
-  //     //       (error, result) => {
-  //     //         if (error) return reject(error);
-  //     //         resolve(result);
-  //     //       },
-  //     //     );
-  //     //     streamifier.createReadStream(file.buffer).pipe(uploadStream);
-  //     //   });
-  //     // });
+      let data = await this.model.tinTuc.findFirst({
+        where: {
+          tieu_de,
+          isDelete: false
+        }
+      })
 
-  //     // const dataCloudinaryArray = await Promise.all(uploadPromises);
-  //     // console.log(dataCloudinaryArray)
+      if (data !== null) {
+        return failCode(res, '', 400, "Tiêu đề bài viết đã tồn tại !");
+      }
 
+      if (!file || !file.buffer) {
+        return failCode(res, '', 400, "Dữ liệu file không hợp lệ !");
+      }
 
-  //     const dataCloudinary = await new Promise<CloudinaryResponse>((resolve, reject) => {
-  //       const uploadStream = cloudinary.uploader.upload_stream(
-  //         (error, result) => {
-  //           if (error) return reject(error);
-  //           resolve(result);
-  //         },
-  //       );
-  //       streamifier.createReadStream(file.buffer).pipe(uploadStream);
-  //     });
-  //     // console.log(dataCloudinary.url)
-  //     // ************************ END *****************************
+      // ⭐****************** CLOUDINARY **************************⭐
+      const dataCloudinary = await new Promise<CloudinaryResponse>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          },
+        );
+        streamifier.createReadStream(file.buffer).pipe(uploadStream);
+      });
+      // console.log(dataCloudinary.url)
+      // ************************ END *****************************
 
+      if (typeof bai_viet_lien_quan === 'string') {
+        bai_viet_lien_quan = JSON.parse(bai_viet_lien_quan);
+      }
 
-  //     await this.model.banner.create({
-  //       data: {
-  //         // ten_hinh_anh: dataCloudinaryArray.map(item => item.url),        // Lấy ra array URL
-  //         url_banner: dataCloudinary.url
-  //       },
-  //     });
+      const newData = await this.model.tinTuc.create({
+        data: {
+          tieu_de,
+          mo_ta,
+          noi_dung,
+          bai_viet_lien_quan,
+          hinh_anh: dataCloudinary.secure_url
+        },
+      });
 
-  //     successCode(res, dataCloudinary, 201, 'Thêm ảnh Banner thành công !');
-  //   }
-  //   catch (exception) {
-  //     console.log("🚀 ~ file: banner.service.ts:159 ~ BannerService ~ postImgBanner ~ exception:", exception);
-  //     errorCode(res, "Lỗi BE")
-  //   }
-  // }
+      successCode(res, newData, 201, 'Thêm tin tức thành công !');
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:176 ~ NewsService ~ postNews ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
 
-  // // ============================================
-  // //           PUT UPLOAD IMG NEWS
-  // // ============================================
-  // async putImgBanner(file: Express.Multer.File, id: number, body: FileUploadDto_banner, res: Response) {
-  //   try {
-  //     let { email } = body
+  // ============================================
+  //           PUT UPLOAD NEWS
+  // ============================================
+  async putNews(file: Express.Multer.File, id: number, body: CreateNewsDto, res: Response) {
+    try {
+      let { tieu_de, mo_ta, noi_dung, bai_viet_lien_quan = [] } = body
 
-  //     if (email === undefined) {
-  //       return failCode(res, "", 400, "Dữ liệu đầu vào không đúng định dạng !")
-  //     }
+      let data = await this.model.tinTuc.findFirst({
+        where: {
+          tin_tuc_id: +id,
+          isDelete: false
+        }
+      })
 
-  //     let checkUser = await this.model.nguoiDung.findFirst({
-  //       where: {
-  //         email,
-  //         isDelete: false
-  //       },
-  //     });
+      if (data === null) {
+        return failCode(res, '', 400, "Bài viết id không tồn tại !");
+      }
 
-  //     if (checkUser === null) {
-  //       return failCode(res, '', 400, "Email người dùng không tồn tại !");
-  //     }
+      if (!file || !file.buffer) {
+        return failCode(res, '', 400, "Dữ liệu file không hợp lệ !");
+      }
 
-  //     let checkBannerID = await this.model.banner.findFirst({
-  //       where: {
-  //         banner_id: +id,
-  //         isDelete: false
-  //       },
-  //     });
+      // ⭐****************** CLOUDINARY **************************⭐
+      const dataCloudinary = await new Promise<CloudinaryResponse>((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          },
+        );
+        streamifier.createReadStream(file.buffer).pipe(uploadStream);
+      });
+      // console.log(dataCloudinary.url)
+      // ************************ END *****************************
 
-  //     if (checkBannerID === null) {
-  //       return failCode(res, '', 400, "Banner ID không tồn tại !");
-  //     }
+      if (typeof bai_viet_lien_quan === 'string') {
+        bai_viet_lien_quan = JSON.parse(bai_viet_lien_quan);
+      }
 
-  //     // ⭐****************** CLOUDINARY **************************⭐
-  //     const dataCloudinary = await new Promise<CloudinaryResponse>((resolve, reject) => {
-  //       const uploadStream = cloudinary.uploader.upload_stream(
-  //         (error, result) => {
-  //           if (error) return reject(error);
-  //           resolve(result);
-  //         },
-  //       );
-  //       streamifier.createReadStream(file.buffer).pipe(uploadStream);
-  //     });
-  //     // console.log(dataCloudinary.url)
-  //     // ************************ END *****************************
+      const newData = await this.model.tinTuc.update({
+        where: {
+          tin_tuc_id: +id,
+          isDelete: false
+        },
+        data: {
+          tieu_de,
+          mo_ta,
+          noi_dung,
+          bai_viet_lien_quan,
+          hinh_anh: dataCloudinary.secure_url        // Lấy ra array URL
+        },
+      });
 
+      successCode(res, newData, 200, 'Cập nhật tin tức thành công !');
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:237 ~ NewsService ~ putNews ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
 
-  //     await this.model.banner.update({
-  //       where: {
-  //         banner_id: +id,
-  //         isDelete: false
-  //       },
-  //       data: {
-  //         url_banner: dataCloudinary.url        // Lấy ra array URL
-  //       },
-  //     });
+  // ============================================
+  //                DELETE NEWS
+  // ============================================
+  async deleteNews(id: number, res: Response) {
+    try {
+      let checkNewsID = await this.model.tinTuc.findFirst({
+        where: {
+          tin_tuc_id: +id,
+          isDelete: false
+        }
+      });
 
-  //     successCode(res, dataCloudinary, 200, 'Cập nhật ảnh Banner thành công !');
-  //   }
-  //   catch (exception) {
-  //     console.log("🚀 ~ file: banner.service.ts:224 ~ BannerService ~ putImgBanner ~ exception:", exception);
-  //     errorCode(res, "Lỗi BE")
-  //   }
-  // }
+      if (checkNewsID === null) {
+        return failCode(res, checkNewsID, 400, "News ID không tồn tại hoặc đã bị xóa trước đó !")
+      }
 
-  // // ============================================
-  // //                DELETE IMG NEWS
-  // // ============================================
-  // async deleteBanner(id: number, res: Response) {
-  //   try {
-  //     let checkBannerID = await this.model.banner.findFirst({
-  //       where: {
-  //         banner_id: +id,
-  //         isDelete: false
-  //       }
-  //     });
+      await this.model.tinTuc.update({
+        where: {
+          tin_tuc_id: +id
+        },
+        data: {
+          isDelete: true
+        }
+      });
 
-  //     if (checkBannerID === null) {
-  //       return failCode(res, checkBannerID, 400, "Room ID không tồn tại hoặc đã bị xóa trước đó !")
-  //     }
-
-  //     await this.model.banner.update({
-  //       where: {
-  //         banner_id: +id
-  //       },
-  //       data: {
-  //         isDelete: true
-  //       }
-  //     });
-
-  //     successCode(res, checkBannerID, 200, "Thành công !")
-  //   }
-  //   catch (exception) {
-  //     console.log("🚀 ~ file: banner.service.ts:257 ~ BannerService ~ deleteBanner ~ exception:", exception);
-  //     errorCode(res, "Lỗi BE")
-  //   }
-  // }
-
-
-
+      successCode(res, checkNewsID, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:270 ~ NewsService ~ deleteNews ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
 }
