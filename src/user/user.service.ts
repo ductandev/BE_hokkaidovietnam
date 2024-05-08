@@ -89,6 +89,9 @@ export class UserService {
                 where: {
                     nguoi_dung_id: +id,
                     isDelete: false
+                },
+                include: {
+                    DonHang: true
                 }
             });
 
