@@ -149,6 +149,29 @@ export class UserService {
         }
     }
 
+    // ============================================
+    //            GET ALL ORDER SUMARY
+    // ============================================
+    async getUserSummary(res: Response) {
+        try {
+            const totalUser = await this.model.nguoiDung.findMany({
+                where: {
+                    isDelete: false
+                }
+            });
+
+            const content = {
+                totalUser: totalUser.length
+            }
+
+            successCode(res, content, 200, "Thành công !")
+        }
+        catch (exception) {
+            console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ getOrderSummary ~ exception:", exception);
+            errorCode(res, "Lỗi BE")
+        }
+    }
+
 
     // ============================================
     // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID

@@ -60,6 +60,16 @@ export class UserController {
         );
     }
 
+    // ============================================
+    //            GET ALL ORDER SUMARY
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN)
+    @Get("summary")
+    getUserSummary(@Res() res: Response) {
+        return this.userService.getUserSummary(res)
+    }
+
 
     // ============================================
     // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
