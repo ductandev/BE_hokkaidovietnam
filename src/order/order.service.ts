@@ -123,6 +123,57 @@ export class OrderService {
   }
 
   // ============================================
+  //            GET ALL ORDER SUMARY
+  // ============================================
+  async getOrderSummary(res: Response) {
+    try {
+      const moment = require('moment-timezone');
+
+      const firstDayOfMonth = moment().startOf('month').format();
+      const lastDayOfMonth = moment().endOf('month').format();
+      // console.log("🚀 firstDayOfMonth ", firstDayOfMonth);
+      // console.log("🚀 lastDayOfMonth ", lastDayOfMonth)
+
+      const totalOrderStatusDone = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: 4,
+          isDelete: false
+        }
+      });
+
+      const totalOderOnMonth = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: 4,
+          isDelete: false,
+          thoi_gian_dat_hang: {
+            gte: firstDayOfMonth,
+            lte: lastDayOfMonth
+          }
+        }
+      })
+
+      // Tính tổng số tiền của tất cả đơn hàng hoàn thành
+      const nestSaleSummary = totalOrderStatusDone.reduce((total, item) => total + item.tong_tien || 0, 0);
+      // Tính tổng số tiền của những đơn hàng hoàn thành trong tháng
+      const nestSaleOfMonth = totalOderOnMonth.reduce((total, item) => total + item.tong_tien || 0, 0);
+
+      const content = {
+        totalOrderStatusDone: totalOrderStatusDone.length,
+        totalOderOnMonth: totalOderOnMonth.length,
+        nestSaleOfMonth,
+        nestSaleSummary
+      }
+
+      successCode(res, content, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ getOrderSummary ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+
+  // ============================================
   //             GET ORDER BY ID
   // ============================================ 
   async getOrderById(id: number, res: Response) {

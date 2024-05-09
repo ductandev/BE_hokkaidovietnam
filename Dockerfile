@@ -3,6 +3,7 @@ FROM node:18
 WORKDIR /usr/src/app
 
 COPY package*.json .
+# COPY package*.json /usr/src/app/
 
 # cài node module trên server
 # RUN yarn install --legacy-peer-deps : lệnh này dùng để cho máy nào chạy ko dc, nó sẽ tìm đúng các thư viện thích hợp để cài cho máy của bạn

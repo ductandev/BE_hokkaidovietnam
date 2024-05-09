@@ -54,6 +54,16 @@ export class OrderController {
   }
 
   // ============================================
+  //            GET ALL ORDER SUMARY
+  // ============================================
+  @HttpCode(200)
+  @Roles(Role.ADMIN)
+  @Get("summary")
+  getOrderSummary(@Res() res: Response) {
+    return this.orderService.getOrderSummary(res)
+  }
+
+  // ============================================
   //             GET ORDER BY ID
   // ============================================ 
   @HttpCode(200)

@@ -55,6 +55,10 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-
+# Script
 script_build.sh
 script_rebuild.sh
+script.sh
+
+Hokkaido_Vietnam.postman_collection.json
+hokkaidovietnam.sql
