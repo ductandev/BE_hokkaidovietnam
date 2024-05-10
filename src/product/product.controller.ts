@@ -56,6 +56,17 @@ export class ProductController {
   }
 
   // ============================================
+  //            GET ALL PRODUCT SUMARY
+  // ============================================
+  @HttpCode(200)
+  // @Roles(Role.ADMIN)
+  @Get("summary")
+  getUserSummary(@Res() res: Response) {
+    return this.productService.getUserSummary(res)
+  }
+
+
+  // ============================================
   //          GET PRODUCT BY ID
   // ============================================
   @HttpCode(200)

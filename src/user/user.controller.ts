@@ -61,7 +61,7 @@ export class UserController {
     }
 
     // ============================================
-    //            GET ALL ORDER SUMARY
+    //            GET ALL USER SUMARY
     // ============================================
     @HttpCode(200)
     @Roles(Role.ADMIN)

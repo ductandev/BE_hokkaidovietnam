@@ -150,7 +150,7 @@ export class UserService {
     }
 
     // ============================================
-    //            GET ALL ORDER SUMARY
+    //            GET ALL USER SUMARY
     // ============================================
     async getUserSummary(res: Response) {
         try {

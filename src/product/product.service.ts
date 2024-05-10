@@ -124,6 +124,36 @@ export class ProductService {
   }
 
   // ============================================
+  //            GET ALL PRODUCT SUMARY
+  // ============================================
+  async getUserSummary(res: Response) {
+    try {
+      const totalProduct = await this.model.sanPham.findMany({
+        where: {
+          isDelete: false
+        }
+      });
+
+      const totalTypeProduct = await this.model.loaiSanPham.findMany({
+        where: {
+          isDelete: false
+        }
+      });
+
+      const content = {
+        totalProduct: totalProduct.length,
+        totalTypeProduct: totalTypeProduct.length
+      }
+
+      successCode(res, content, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ getOrderSummary ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
   //           GET PRODUCT BY ID
   // ============================================ 
   async getProductById(productID: number, res: Response) {
