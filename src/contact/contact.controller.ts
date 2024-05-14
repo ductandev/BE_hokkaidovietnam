@@ -81,8 +81,8 @@ export class ContactController {
   //               PUT CONTACT 
   // ============================================
   @HttpCode(20)
-  // @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  // @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
   @Put('/:id')
   putContact(
     @Param('id') id: number,
