@@ -67,8 +67,8 @@ export class ContactController {
   //               POST CONTACT
   // ============================================
   @HttpCode(201)
-  // @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  // @Roles(Role.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
   @Post('/')
   postContact(
     @Body() body: CreateContactDto,
@@ -81,8 +81,8 @@ export class ContactController {
   //               PUT CONTACT 
   // ============================================
   @HttpCode(20)
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  @Roles(Role.ADMIN)
+  // @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  // @Roles(Role.ADMIN)
   @Put('/:id')
   putContact(
     @Param('id') id: number,
