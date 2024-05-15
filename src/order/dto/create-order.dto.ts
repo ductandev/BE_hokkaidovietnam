@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsString, IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, Length, Matches, IsNumber } from 'class-validator';
 
 export class CreateOrderDto {
     @IsNotEmpty({ message: 'Email không được bỏ trống !' })
@@ -25,17 +25,17 @@ export class CreateOrderDto {
     dia_chi: string;
 
     @IsNotEmpty({ message: 'Phường ID không được bỏ trống !' })
-    @IsString()
+    @IsNumber()
     @ApiProperty()
     phuong_id: number;
 
     @IsNotEmpty({ message: 'Quận ID không được bỏ trống !' })
-    @IsString()
+    @IsNumber()
     @ApiProperty()
     quan_id: number;
 
     @IsNotEmpty({ message: 'Tỉnh thành không được bỏ trống !' })
-    @IsString()
+    @IsNumber()
     @ApiProperty()
     tinh_thanh_id: number;
 
