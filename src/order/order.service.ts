@@ -237,7 +237,7 @@ export class OrderService {
   // ============================================
   async postOrder(body: CreateOrderDto, res: Response) {
     try {
-      let { ho_ten, email, dia_chi, so_dien_thoai, san_pham } = body
+      let { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham } = body
 
       let checkUserPhone = await this.model.nguoiDung.findFirst({
         where: {
@@ -255,6 +255,9 @@ export class OrderService {
             email,
             mat_khau: '',
             dia_chi,
+            phuong_id,
+            quan_id,
+            tinh_thanh_id,
             so_dien_thoai
           },
         });

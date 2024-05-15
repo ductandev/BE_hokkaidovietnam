@@ -20,10 +20,25 @@ export class UserUpdateDto {
     @ApiProperty()
     mat_khau: string;
 
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Địa chỉ không được bỏ trống !' })
     @IsString()
     @ApiProperty()
     dia_chi: string;
+
+    @IsNotEmpty({ message: 'Phường ID không được bỏ trống !' })
+    @IsString()
+    @ApiProperty()
+    phuong_id: number;
+
+    @IsNotEmpty({ message: 'Quận ID không được bỏ trống !' })
+    @IsString()
+    @ApiProperty()
+    quan_id: number;
+
+    @IsNotEmpty({ message: 'Tỉnh thành không được bỏ trống !' })
+    @IsString()
+    @ApiProperty()
+    tinh_thanh_id: number;
 
     @IsNotEmpty()
     @IsString()

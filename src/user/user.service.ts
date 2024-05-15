@@ -337,7 +337,7 @@ export class UserService {
     // ============================================  
     async updateUserById(id: string, body: UserUpdateDto, res: Response) {
         try {
-            let { ho_ten, email, mat_khau, dia_chi, so_dien_thoai, gioi_tinh } = body;
+            let { ho_ten, email, mat_khau, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, gioi_tinh } = body;
 
             let checkEmail = await this.model.nguoiDung.findFirst({
                 where: {
@@ -377,6 +377,9 @@ export class UserService {
                     ho_ten,
                     mat_khau: await bcrypt.hash(mat_khau, 10), //  thay đổi bcrypt.hashSync thành await bcrypt.hash để sử dụng hàm hash bất đồng bộ. Điều này cần thiết để tránh blocking thread chính khi mã hóa mật khẩu.
                     dia_chi,
+                    phuong_id,
+                    quan_id,
+                    tinh_thanh_id,
                     so_dien_thoai,
                     gioi_tinh
                 }

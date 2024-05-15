@@ -48,6 +48,9 @@ model DonHang {
   ho_ten                  String?            @db.VarChar(100)
   so_dien_thoai           String             @db.VarChar(50)
   dia_chi                 String             @db.VarChar(255)
+  phuong_id               Int?
+  quan_id                 Int?
+  tinh_thanh_id           Int?
   giao_dia_chi_khac       Boolean?           @default(false)
   ghi_chu                 String?            @db.Text
   hinh_thuc_thanh_toan_id Int?
@@ -81,6 +84,9 @@ model NguoiDung {
   email         String     @db.VarChar(100)
   mat_khau      String     @db.VarChar(255)
   dia_chi       String     @db.VarChar(255)
+  phuong_id     Int?
+  quan_id       Int?
+  tinh_thanh_id Int?
   so_dien_thoai String     @unique(map: "so_dien_thoai") @db.VarChar(50)
   anh_dai_dien  String?    @db.VarChar(255)
   gioi_tinh     String?    @db.VarChar(20)
@@ -193,4 +199,16 @@ model TrangThaiLienHe {
   ten_trang_thai_lien_he String?  @db.VarChar(50)
   isDelete               Boolean? @default(false)
   LienHe                 LienHe[]
+}
+
+model MaGiam {
+  id           Int       @id @default(autoincrement())
+  ma_giam_gia  String?   @db.VarChar(150)
+  noi_dung     String?   @db.VarChar(255)
+  ap_dung_cho  String?   @db.VarChar(100)
+  loai         String?   @db.VarChar(50)
+  cu_the       Int?
+  gia_tri_giam Int?
+  ngay_het_han DateTime? @db.DateTime(0)
+  isDelete     Boolean?  @default(false)
 }
