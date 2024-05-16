@@ -36,10 +36,10 @@ export class AuthController {
   // =============================================
   //                  QUÊN MẬT KHẨU
   // =============================================
-  // @HttpCode(200)
-  // @Get("/forgot-password")
-  // sendMailer(@Res() res: Response) {
-  //   return this.authService.sendMailer(res)
-  // }
+  @HttpCode(200)
+  @Get("/forgot-password")
+  sendMailer(@Res() res: Response) {
+    return this.authService.sendMailer(res)
+  }
 
 }
