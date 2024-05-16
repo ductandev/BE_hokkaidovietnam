@@ -48,9 +48,9 @@ model DonHang {
   ho_ten                  String?            @db.VarChar(100)
   so_dien_thoai           String             @db.VarChar(50)
   dia_chi                 String             @db.VarChar(255)
-  phuong_id               Int?
-  quan_id                 Int?
-  tinh_thanh_id           Int?
+  phuong_id               String?            @db.VarChar(50)
+  quan_id                 String?            @db.VarChar(50)
+  tinh_thanh_id           String?            @db.VarChar(50)
   giao_dia_chi_khac       Boolean?           @default(false)
   ghi_chu                 String?            @db.Text
   hinh_thuc_thanh_toan_id Int?
@@ -84,9 +84,9 @@ model NguoiDung {
   email         String     @db.VarChar(100)
   mat_khau      String     @db.VarChar(255)
   dia_chi       String     @db.VarChar(255)
-  phuong_id     Int?
-  quan_id       Int?
-  tinh_thanh_id Int?
+  phuong_id     String?    @db.VarChar(50)
+  quan_id       String?    @db.VarChar(50)
+  tinh_thanh_id String?    @db.VarChar(50)
   so_dien_thoai String     @unique(map: "so_dien_thoai") @db.VarChar(50)
   anh_dai_dien  String?    @db.VarChar(255)
   gioi_tinh     String?    @db.VarChar(20)

@@ -25,19 +25,19 @@ export class CreateOrderDto {
     dia_chi: string;
 
     @IsNotEmpty({ message: 'Phường ID không được bỏ trống !' })
-    @IsNumber()
+    @IsString()
     @ApiProperty()
-    phuong_id: number;
+    phuong_id: string;
 
     @IsNotEmpty({ message: 'Quận ID không được bỏ trống !' })
-    @IsNumber()
+    @IsString()
     @ApiProperty()
-    quan_id: number;
+    quan_id: string;
 
     @IsNotEmpty({ message: 'Tỉnh thành không được bỏ trống !' })
-    @IsNumber()
+    @IsString()
     @ApiProperty()
-    tinh_thanh_id: number;
+    tinh_thanh_id: string;
 
     @ApiProperty()
     giao_dia_chi_khac: boolean

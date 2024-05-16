@@ -206,7 +206,7 @@ export class OrderService {
   // =====================================================
   // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY WARD
   // =====================================================
-  async getAllPaginationWard(typeID: number, pageIndex: number, pageSize: number, phuong_id: number, res: Response) {
+  async getAllPaginationWard(typeID: number, pageIndex: number, pageSize: number, phuong_id: string, res: Response) {
     try {
       if (pageIndex <= 0 || pageSize <= 0) {
         return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
@@ -217,7 +217,7 @@ export class OrderService {
       if (+typeID === 0) {
         let total = await this.model.donHang.findMany({
           where: {
-            phuong_id: +phuong_id,
+            phuong_id,
             isDelete: false
           }
         });
@@ -230,7 +230,7 @@ export class OrderService {
           skip: +index,     // Sử dụng skip thay vì offset
           take: +pageSize,  // Sử dụng take thay vì limit
           where: {
-            phuong_id: +phuong_id,
+            phuong_id,
             isDelete: false
           }
         });
@@ -245,7 +245,7 @@ export class OrderService {
       let total = await this.model.donHang.findMany({
         where: {
           trang_thai_don_hang_id: +typeID,
-          phuong_id: +phuong_id,
+          phuong_id,
           isDelete: false
         }
       });
@@ -258,7 +258,7 @@ export class OrderService {
         skip: +index,     // Sử dụng skip thay vì offset
         take: +pageSize,  // Sử dụng take thay vì limit
         where: {
-          phuong_id: +phuong_id,
+          phuong_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
         }
@@ -279,7 +279,7 @@ export class OrderService {
   // =====================================================
   // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY DISSTRICT
   // =====================================================
-  async getAllPaginationDistrict(typeID: number, pageIndex: number, pageSize: number, quan_id: number, res: Response) {
+  async getAllPaginationDistrict(typeID: number, pageIndex: number, pageSize: number, quan_id: string, res: Response) {
     try {
       if (pageIndex <= 0 || pageSize <= 0) {
         return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
@@ -290,7 +290,7 @@ export class OrderService {
       if (+typeID === 0) {
         let total = await this.model.donHang.findMany({
           where: {
-            quan_id: +quan_id,
+            quan_id,
             isDelete: false
           }
         });
@@ -303,7 +303,7 @@ export class OrderService {
           skip: +index,     // Sử dụng skip thay vì offset
           take: +pageSize,  // Sử dụng take thay vì limit
           where: {
-            quan_id: +quan_id,
+            quan_id,
             isDelete: false
           }
         });
@@ -318,7 +318,7 @@ export class OrderService {
       let total = await this.model.donHang.findMany({
         where: {
           trang_thai_don_hang_id: +typeID,
-          quan_id: +quan_id,
+          quan_id,
           isDelete: false
         }
       });
@@ -331,7 +331,7 @@ export class OrderService {
         skip: +index,     // Sử dụng skip thay vì offset
         take: +pageSize,  // Sử dụng take thay vì limit
         where: {
-          quan_id: +quan_id,
+          quan_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
         }
@@ -352,7 +352,7 @@ export class OrderService {
   // =======================================================
   // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY PROVINCE
   // =======================================================
-  async getAllPaginationProvince(typeID: number, pageIndex: number, pageSize: number, tinh_thanh_id: number, res: Response) {
+  async getAllPaginationProvince(typeID: number, pageIndex: number, pageSize: number, tinh_thanh_id: string, res: Response) {
     try {
       if (pageIndex <= 0 || pageSize <= 0) {
         return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
@@ -363,7 +363,7 @@ export class OrderService {
       if (+typeID === 0) {
         let total = await this.model.donHang.findMany({
           where: {
-            tinh_thanh_id: +tinh_thanh_id,
+            tinh_thanh_id,
             isDelete: false
           }
         });
@@ -376,7 +376,7 @@ export class OrderService {
           skip: +index,     // Sử dụng skip thay vì offset
           take: +pageSize,  // Sử dụng take thay vì limit
           where: {
-            tinh_thanh_id: +tinh_thanh_id,
+            tinh_thanh_id,
             isDelete: false
           }
         });
@@ -391,7 +391,7 @@ export class OrderService {
       let total = await this.model.donHang.findMany({
         where: {
           trang_thai_don_hang_id: +typeID,
-          tinh_thanh_id: +tinh_thanh_id,
+          tinh_thanh_id,
           isDelete: false
         }
       });
@@ -404,7 +404,7 @@ export class OrderService {
         skip: +index,     // Sử dụng skip thay vì offset
         take: +pageSize,  // Sử dụng take thay vì limit
         where: {
-          tinh_thanh_id: +tinh_thanh_id,
+          tinh_thanh_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
         }
@@ -620,10 +620,12 @@ export class OrderService {
     try {
       const moment = require('moment-timezone');
 
-      let { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham } = body
+      let { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham, hinh_thuc_thanh_toan_id } = body
 
       body.thoi_gian_dat_hang = new Date();
       body.thoi_gian_dat_hang.setHours(body.thoi_gian_dat_hang.getHours() + 7)
+
+      body.hinh_thuc_thanh_toan_id = +hinh_thuc_thanh_toan_id
 
       let checkUserPhone = await this.model.nguoiDung.findFirst({
         where: {

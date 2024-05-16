@@ -89,7 +89,7 @@ export class OrderController {
     @Query('typeID') typeID: number,
     @Query('page') pageIndex: number,
     @Query('limit') pageSize: number,
-    @Query('phuong_id') phuong_id: number,
+    @Query('phuong_id') phuong_id: string,
     @Res() res: Response,
   ) {
     return this.orderService.getAllPaginationWard(
@@ -112,7 +112,7 @@ export class OrderController {
     @Query('typeID') typeID: number,
     @Query('page') pageIndex: number,
     @Query('limit') pageSize: number,
-    @Query('quan_id') quan_id: number,
+    @Query('quan_id') quan_id: string,
     @Res() res: Response,
   ) {
     return this.orderService.getAllPaginationDistrict(
@@ -135,7 +135,7 @@ export class OrderController {
     @Query('typeID') typeID: number,
     @Query('page') pageIndex: number,
     @Query('limit') pageSize: number,
-    @Query('tinh_thanh_id') tinh_thanh_id: number,
+    @Query('tinh_thanh_id') tinh_thanh_id: string,
     @Res() res: Response,
   ) {
     return this.orderService.getAllPaginationProvince(
