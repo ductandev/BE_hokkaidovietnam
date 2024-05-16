@@ -83,10 +83,10 @@ export class UserController {
 
 
     // ============================================
-    //        TÌM TÊN NGƯỜI DÙNG THEO TÊN
+    //        TÌM NGƯỜI DÙNG THEO TÊN
     // ============================================
     @HttpCode(200)
-    @Roles(Role.ADMIN, Role.USER)
+    @Roles(Role.ADMIN)
     @Get("name/:name")
     searchUserByName(@Param("name") name: string, @Res() res: Response) {
         return this.userService.searchUserByName(name, res)
@@ -126,7 +126,7 @@ export class UserController {
     // ============================================
     @HttpCode(200)
     @Roles(Role.ADMIN, Role.USER)
-    @Put("update/:id")
+    @Put("/:id")
     updateUserById(@Param("id") id: string, @Body() body: UserUpdateDto, @Res() res: Response) {
         return this.userService.updateUserById(id, body, res)
     }
@@ -136,7 +136,7 @@ export class UserController {
     // ============================================
     @HttpCode(200)
     @Roles(Role.ADMIN)
-    @Delete("delete/:id")
+    @Delete("/:id")
     deleteUserById(@Param("id") id: string, @Res() res: Response) {
         return this.userService.deleteUserById(id, res)
     }

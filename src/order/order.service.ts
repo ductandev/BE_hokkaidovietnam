@@ -42,7 +42,7 @@ export class OrderService {
   }
 
   // ============================================
-  //      GET ALL ORDER PAGINATION BY SEARCH
+  //      GET ALL ORDER PAGINATION BY SEARCH NAME
   // ============================================
   async getAllPagination(typeID: number, pageIndex: number, pageSize: number, search: string, res: Response) {
     try {
@@ -104,6 +104,387 @@ export class OrderService {
         where: {
           ho_ten: {
             contains: search   // LIKE '%nameProduct%'
+          },
+          trang_thai_don_hang_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
+      }
+
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // =====================================================
+  // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY ADDRESS
+  // =====================================================
+  async getAllPaginationAddress(typeID: number, pageIndex: number, pageSize: number, search: string, res: Response) {
+    try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
+
+      let index = (pageIndex - 1) * pageSize;
+
+      if (+typeID === 0) {
+        let total = await this.model.donHang.findMany({
+          where: {
+            dia_chi: {
+              contains: search   // LIKE '%nameProduct%'
+            },
+            isDelete: false
+          }
+        });
+
+        if (total.length === 0) {
+          return successCode(res, total, 200, "Không tìm thấy địa chỉ này !")
+        }
+
+        let data = await this.model.donHang.findMany({
+          skip: +index,     // Sử dụng skip thay vì offset
+          take: +pageSize,  // Sử dụng take thay vì limit
+          where: {
+            dia_chi: {
+              contains: search   // LIKE '%nameProduct%'
+            },
+            isDelete: false
+          }
+        });
+
+        if (data.length === 0) {
+          return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
+        }
+
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+      }
+
+      let total = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: +typeID,
+          dia_chi: {
+            contains: search   // LIKE '%nameProduct%'
+          },
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu được tìm thấy !")
+      }
+
+      let data = await this.model.donHang.findMany({
+        skip: +index,     // Sử dụng skip thay vì offset
+        take: +pageSize,  // Sử dụng take thay vì limit
+        where: {
+          dia_chi: {
+            contains: search   // LIKE '%nameProduct%'
+          },
+          trang_thai_don_hang_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
+      }
+
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // =====================================================
+  // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY WARD
+  // =====================================================
+  async getAllPaginationWard(typeID: number, pageIndex: number, pageSize: number, phuong_id: number, res: Response) {
+    try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
+
+      let index = (pageIndex - 1) * pageSize;
+
+      if (+typeID === 0) {
+        let total = await this.model.donHang.findMany({
+          where: {
+            phuong_id: +phuong_id,
+            isDelete: false
+          }
+        });
+
+        if (total.length === 0) {
+          return successCode(res, total, 200, "Không tìm thấy phường ID này !")
+        }
+
+        let data = await this.model.donHang.findMany({
+          skip: +index,     // Sử dụng skip thay vì offset
+          take: +pageSize,  // Sử dụng take thay vì limit
+          where: {
+            phuong_id: +phuong_id,
+            isDelete: false
+          }
+        });
+
+        if (data.length === 0) {
+          return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
+        }
+
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+      }
+
+      let total = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: +typeID,
+          phuong_id: +phuong_id,
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu được tìm thấy !")
+      }
+
+      let data = await this.model.donHang.findMany({
+        skip: +index,     // Sử dụng skip thay vì offset
+        take: +pageSize,  // Sử dụng take thay vì limit
+        where: {
+          phuong_id: +phuong_id,
+          trang_thai_don_hang_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
+      }
+
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // =====================================================
+  // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY DISSTRICT
+  // =====================================================
+  async getAllPaginationDistrict(typeID: number, pageIndex: number, pageSize: number, quan_id: number, res: Response) {
+    try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
+
+      let index = (pageIndex - 1) * pageSize;
+
+      if (+typeID === 0) {
+        let total = await this.model.donHang.findMany({
+          where: {
+            quan_id: +quan_id,
+            isDelete: false
+          }
+        });
+
+        if (total.length === 0) {
+          return successCode(res, total, 200, "Không tìm thấy quận ID này !")
+        }
+
+        let data = await this.model.donHang.findMany({
+          skip: +index,     // Sử dụng skip thay vì offset
+          take: +pageSize,  // Sử dụng take thay vì limit
+          where: {
+            quan_id: +quan_id,
+            isDelete: false
+          }
+        });
+
+        if (data.length === 0) {
+          return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
+        }
+
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+      }
+
+      let total = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: +typeID,
+          quan_id: +quan_id,
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu được tìm thấy !")
+      }
+
+      let data = await this.model.donHang.findMany({
+        skip: +index,     // Sử dụng skip thay vì offset
+        take: +pageSize,  // Sử dụng take thay vì limit
+        where: {
+          quan_id: +quan_id,
+          trang_thai_don_hang_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
+      }
+
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // =======================================================
+  // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY PROVINCE
+  // =======================================================
+  async getAllPaginationProvince(typeID: number, pageIndex: number, pageSize: number, tinh_thanh_id: number, res: Response) {
+    try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
+
+      let index = (pageIndex - 1) * pageSize;
+
+      if (+typeID === 0) {
+        let total = await this.model.donHang.findMany({
+          where: {
+            tinh_thanh_id: +tinh_thanh_id,
+            isDelete: false
+          }
+        });
+
+        if (total.length === 0) {
+          return successCode(res, total, 200, "Không tìm thấy dữ liệu tỉnh thành ID này !")
+        }
+
+        let data = await this.model.donHang.findMany({
+          skip: +index,     // Sử dụng skip thay vì offset
+          take: +pageSize,  // Sử dụng take thay vì limit
+          where: {
+            tinh_thanh_id: +tinh_thanh_id,
+            isDelete: false
+          }
+        });
+
+        if (data.length === 0) {
+          return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
+        }
+
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+      }
+
+      let total = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: +typeID,
+          tinh_thanh_id: +tinh_thanh_id,
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu được tìm thấy !")
+      }
+
+      let data = await this.model.donHang.findMany({
+        skip: +index,     // Sử dụng skip thay vì offset
+        take: +pageSize,  // Sử dụng take thay vì limit
+        where: {
+          tinh_thanh_id: +tinh_thanh_id,
+          trang_thai_don_hang_id: +typeID,
+          isDelete: false
+        }
+      });
+
+      if (data.length === 0) {
+        return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
+      }
+
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // =======================================================
+  // GET ALL ORDER PAGINATION BY TYPE_ID SEARCH BY PHONE
+  // =======================================================
+  async getAllPaginationPhone(typeID: number, pageIndex: number, pageSize: number, so_dien_thoai: string, res: Response) {
+    try {
+      if (pageIndex <= 0 || pageSize <= 0) {
+        return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
+      }
+
+      let index = (pageIndex - 1) * pageSize;
+
+      if (+typeID === 0) {
+        let total = await this.model.donHang.findMany({
+          where: {
+            so_dien_thoai: {
+              contains: so_dien_thoai
+            },
+            isDelete: false
+          }
+        });
+
+        if (total.length === 0) {
+          return successCode(res, total, 200, "Không tìm thấy người dùng có số điện thoại này !")
+        }
+
+        let data = await this.model.donHang.findMany({
+          skip: +index,     // Sử dụng skip thay vì offset
+          take: +pageSize,  // Sử dụng take thay vì limit
+          where: {
+            so_dien_thoai: {
+              contains: so_dien_thoai
+            },
+            isDelete: false
+          }
+        });
+
+        if (data.length === 0) {
+          return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu số điện thoại được tìm thấy")
+        }
+
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+      }
+
+      let total = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: +typeID,
+          so_dien_thoai: {
+            contains: so_dien_thoai
+          },
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu số điện thoại được tìm thấy !")
+      }
+
+      let data = await this.model.donHang.findMany({
+        skip: +index,     // Sử dụng skip thay vì offset
+        take: +pageSize,  // Sử dụng take thay vì limit
+        where: {
+          so_dien_thoai: {
+            contains: so_dien_thoai
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
@@ -204,7 +585,7 @@ export class OrderService {
   }
 
   // ============================================
-  //             GET ORDER BY USER ID
+  //         GET ORDER BY USER PHONE
   // ============================================ 
   async getOrderByUserId(phone: string, res: Response) {
     try {
@@ -219,7 +600,7 @@ export class OrderService {
       })
 
       if (checkUserPhone === null) {
-        return failCode(res, checkUserPhone, 400, "Người dùng ID không tồn tại !")
+        return failCode(res, checkUserPhone, 400, "Số điện thoại người dùng không tồn tại !")
       }
 
       successCode(res, checkUserPhone, 200, "Thành công !")
@@ -237,7 +618,12 @@ export class OrderService {
   // ============================================
   async postOrder(body: CreateOrderDto, res: Response) {
     try {
+      const moment = require('moment-timezone');
+
       let { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham } = body
+
+      body.thoi_gian_dat_hang = new Date();
+      body.thoi_gian_dat_hang.setHours(body.thoi_gian_dat_hang.getHours() + 7)
 
       let checkUserPhone = await this.model.nguoiDung.findFirst({
         where: {

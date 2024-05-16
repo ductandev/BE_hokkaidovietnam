@@ -149,6 +149,7 @@ export class DiscountService {
             let { ma_giam_gia, noi_dung, ap_dung_cho, loai, cu_the, gia_tri_giam, ngay_het_han } = body
 
             const currentDate = new Date();
+            currentDate.setHours(currentDate.getHours() + 7)
 
             let checkMagiam = await this.model.maGiam.findFirst({
                 where: {

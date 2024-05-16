@@ -57,7 +57,7 @@ export class CreateOrderDto {
     @ApiProperty()
     ma_giam_gia: string
 
-    @ApiProperty()
+    // @ApiProperty()
     thoi_gian_dat_hang: Date
 
     // @ApiProperty()

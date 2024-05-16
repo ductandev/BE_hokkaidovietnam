@@ -14,7 +14,7 @@ import { CreateDiscountDto, NameDiscountDto } from './dto/create-discount.dto';
 
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+// @UseGuards(AuthenticationGuard, AuthorizationGuard)
 @ApiTags('GiamGia')
 @Controller('api/discount')
 export class DiscountController {
@@ -24,6 +24,7 @@ export class DiscountController {
   //            GET ALL DISCOUNT
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Get('/')
   getAllDiscount(@Res() res: Response) {
@@ -34,6 +35,7 @@ export class DiscountController {
   // GET ALL DISCOUNT PAGINATION BY SEARCH
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Get('pagination')
   getAllPagination(
@@ -54,7 +56,8 @@ export class DiscountController {
   //             GET DISCOUNT BY ID
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
   @Get("/:id")
   getById(@Param("id") id: number, @Res() res: Response) {
     return this.discountService.getById(id, res)
@@ -64,7 +67,7 @@ export class DiscountController {
   //             GET DISCOUNT BY NAME
   // ============================================ 
   @HttpCode(200)
-  @Roles(Role.ADMIN, Role.USER)
+  // @Roles(Role.ADMIN, Role.USER)
   @Get("check/name")
   getByName(
     @Body() body: NameDiscountDto,
@@ -77,6 +80,7 @@ export class DiscountController {
   //               POST DISCOUNT
   // ============================================
   @HttpCode(201)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Post("/create")
   postDiscount(
@@ -90,6 +94,7 @@ export class DiscountController {
   //               PUT DISCOUNT
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Put("/:id")
   putDiscountbyId(
@@ -104,6 +109,7 @@ export class DiscountController {
   //            DELETE DISCOUNT  
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Delete("/:id")
   deleteOrderById(
