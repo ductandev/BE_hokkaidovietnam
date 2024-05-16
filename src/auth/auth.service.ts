@@ -9,13 +9,13 @@ import * as bcrypt from 'bcrypt';
 import { UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
 // Thư viện gửi email
-import { MailerService } from '@nestjs-modules/mailer';
+// import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private readonly mailService: MailerService
+    // private readonly mailService: MailerService
   ) { }
 
   model = new PrismaClient();
@@ -152,23 +152,23 @@ export class AuthService {
   // =============================================
   //                  QUÊN MẬT KHẨU
   // =============================================
-  async sendMailer(res: Response) {
-    try {
-      const message = `Forgot your password? If you didn't forget your password, please ignore this email!`;
+  // async sendMailer(res: Response) {
+  //   try {
+  //     const message = `Forgot your password? If you didn't forget your password, please ignore this email!`;
 
-      this.mailService.sendMail({
-        from: 'Kingsley Okure <daotaotainangtrevn@gmail.com>',
-        to: 'nguyenductan998@gmail.com',
-        subject: `How to Send Emails with Nodemailer`,
-        text: message,
-      });
+  //     this.mailService.sendMail({
+  //       from: 'Kingsley Okure <daotaotainangtrevn@gmail.com>',
+  //       to: 'nguyenductan998@gmail.com',
+  //       subject: `How to Send Emails with Nodemailer`,
+  //       text: message,
+  //     });
 
-      successCode(res, "data", 201, 'Đăng ký thành công !');
-    }
-    catch (error) {
-      errorCode(res, 'Lỗi BE');
-    }
-  }
+  //     successCode(res, "data", 201, 'Đăng ký thành công !');
+  //   }
+  //   catch (error) {
+  //     errorCode(res, 'Lỗi BE');
+  //   }
+  // }
 
 
 
