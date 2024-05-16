@@ -19,7 +19,7 @@ import { NewsModule } from './news/news.module';
 import { ContactModule } from './contact/contact.module';
 import { CartModule } from './cart/cart.module';
 import { DiscountModule } from './discount/discount.module';
-import { MailerModule } from '@nestjs-modules/mailer';
+// import { MailerModule } from '@nestjs-modules/mailer';
 
 
 @Module({
@@ -27,15 +27,15 @@ import { MailerModule } from '@nestjs-modules/mailer';
     CloudinaryModule,                           // CloudinaryModule
     ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
-    MailerModule.forRoot({
-      transport: {
-        host: process.env.EMAIL_HOST,
-        auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
-        },
-      },
-    }),
+    // MailerModule.forRoot({
+    //   transport: {
+    //     host: process.env.EMAIL_HOST,
+    //     auth: {
+    //       user: process.env.EMAIL_USERNAME,
+    //       pass: process.env.EMAIL_PASSWORD,
+    //     },
+    //   },
+    // }),
     UserModule,
     CommentModule,
     ProductModule,
