@@ -8,10 +8,12 @@ import { Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
+// Thư viện gửi email
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) { }
+  constructor(private jwtService: JwtService, private readonly mailService: MailerService) { }
 
   model = new PrismaClient();
 
@@ -68,7 +70,7 @@ export class AuthService {
   // =============================================
   async signUp(body: UserSignUpType, res: Response) {
     try {
-      let { ho_ten, email, mat_khau, dia_chi, so_dien_thoai, gioi_tinh } = body;
+      let { ho_ten, email, mat_khau, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, gioi_tinh } = body;
 
       let checkUserEmail = await this.model.nguoiDung.findMany({
         where: {
@@ -109,6 +111,9 @@ export class AuthService {
             email,
             mat_khau: await bcrypt.hash(mat_khau, 10),
             dia_chi,
+            phuong_id,
+            quan_id,
+            tinh_thanh_id,
             so_dien_thoai,
             gioi_tinh
           }
@@ -122,6 +127,9 @@ export class AuthService {
         email,
         mat_khau: await bcrypt.hash(mat_khau, 10), //  thay đổi bcrypt.hashSync thành await bcrypt.hash để sử dụng hàm hash bất đồng bộ. Điều này cần thiết để tránh blocking thread chính khi mã hóa mật khẩu.
         dia_chi,
+        phuong_id,
+        quan_id,
+        tinh_thanh_id,
         so_dien_thoai,
         gioi_tinh,
       };
@@ -137,4 +145,29 @@ export class AuthService {
       // errorCode(res, `Lỗi BE: ${exception}`);
     }
   }
+
+  // =============================================
+  //                  QUÊN MẬT KHẨU
+  // =============================================
+  async sendMailer(res: Response) {
+    try {
+      const message = `Forgot your password? If you didn't forget your password, please ignore this email!`;
+
+      this.mailService.sendMail({
+        from: 'Kingsley Okure <daotaotainangtrevn@gmail.com>',
+        to: 'nguyenductan998@gmail.com',
+        subject: `How to Send Emails with Nodemailer`,
+        text: message,
+      });
+
+      successCode(res, "data", 201, 'Đăng ký thành công !');
+    }
+    catch (error) {
+      errorCode(res, 'Lỗi BE');
+    }
+  }
+
+
+
+
 }

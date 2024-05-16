@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, Delete, HttpCode, Res } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete, HttpCode, Res, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
@@ -31,6 +31,15 @@ export class AuthController {
     // Nếu dữ liệu không hợp lệ, NestJS sẽ tự động trả về response lỗi
     // Nếu dữ liệu hợp lệ, createUserDto sẽ chứa dữ liệu được validate
     return this.authService.signUp(body, res);
+  }
+
+  // =============================================
+  //                  QUÊN MẬT KHẨU
+  // =============================================
+  @HttpCode(200)
+  @Get("/forgot-password")
+  sendMailer(@Res() res: Response) {
+    return this.authService.sendMailer(res)
   }
 
 }

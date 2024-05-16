@@ -27,6 +27,21 @@ export class UserSignUpType {
     @ApiProperty()
     dia_chi: string;
 
+    @IsNotEmpty({ message: 'Phường ID không được bỏ trống !' })
+    @IsString()
+    @ApiProperty()
+    phuong_id: string;
+
+    @IsNotEmpty({ message: 'Quận ID không được bỏ trống !' })
+    @IsString()
+    @ApiProperty()
+    quan_id: string;
+
+    @IsNotEmpty({ message: 'Tỉnh thành không được bỏ trống !' })
+    @IsString()
+    @ApiProperty()
+    tinh_thanh_id: string;
+
     @IsNotEmpty({ message: 'Số điện thoại không được bỏ trống !' })
     @IsString()
     @Length(10, 10, { message: 'Số điện thoại phải có độ dài là 10 ký tự' })
