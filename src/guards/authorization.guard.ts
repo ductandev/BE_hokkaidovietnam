@@ -23,7 +23,8 @@ export class AuthorizationGuard implements CanActivate {
 
         const request = context.switchToHttp().getRequest();
         const userRole = request.user.data
-        // .includes(): kiểm tra xem một giá trị cụ thể có tồn tại trong mảng hay không. Nếu tồn tại, nó trả về true, ngược lại, nó trả về false.
+        // .includes(): kiểm tra xem một giá trị cụ thể có tồn tại trong mảng hay không.
+        //  Nếu tồn tại, nó trả về true, ngược lại, nó trả về false.
         return requiredRoles.includes(userRole.vai_tro_id);
     }
 }

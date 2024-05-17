@@ -1,23 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { Response } from 'express';
+import { JwtService } from '@nestjs/jwt';
+
 
 import { successCode, failCode, errorCode } from 'src/Config/response';
 import { CreateCartDto } from './dto/create-cart.dto';
 
 @Injectable()
 export class CartService {
-  constructor() { }
+  constructor(private jwtService: JwtService) { }
 
   model = new PrismaClient();
 
   // ============================================
   //            GET ALL CART
   // ============================================ 
-  async getAll(res: Response) {
+  async getAll(req: Request, res: Response) {
     try {
+      // -------------------TOKEN----------------------------
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return failCode(res, '', 401, 'Yêu cầu token!');
+      }
+      const user = this.jwtService.verify(token);
+      let nguoi_dung_id = +user.data.nguoi_dung_id
+      // ----------------------------------------------------
+
       let data = await this.model.gioHang.findMany({
         where: {
+          nguoi_dung_id,
           isDelete: false,
         },
         include: {
@@ -79,15 +91,25 @@ export class CartService {
   // ============================================
   //                 POST CART
   // ============================================
-  async postCart(body: CreateCartDto, res: Response) {
+  async postCart(req: Request, body: CreateCartDto, res: Response) {
     try {
-      let { nguoi_dung_id, san_pham_id, so_luong } = body;
+      // -------------------TOKEN----------------------------
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return failCode(res, '', 401, 'Yêu cầu token!');
+      }
+      const user = this.jwtService.verify(token);
+      let nguoi_dung_id = +user.data.nguoi_dung_id
+      // -----------------------------------------------------
+
+      let { san_pham_id, so_luong } = body;
 
       // ****************************************************
       // CHECK USER ID CÓ TỒN TẠI HAY KHÔNG 
       let checkUserID = await this.model.nguoiDung.findFirst({
         where: {
           nguoi_dung_id,
+          vai_tro_id: 2,
           isDelete: false
         }
       });
@@ -117,17 +139,23 @@ export class CartService {
           isDelete: false
         }
       })
+
       if (checkCart === null && so_luong === 0) {
         return failCode(res, '', 400, "Số lượng sản phẩm phải lớn hơn 0 !")
       }
 
+
       if (checkCart === null && so_luong > 0) {
         await this.model.gioHang.create({
-          data: body
+          data: {
+            nguoi_dung_id,
+            san_pham_id,
+            so_luong
+          }
         })
-
         return successCode(res, body, 201, "Thêm giỏ hàng thành công !")
       }
+
 
       if (checkCart && so_luong === 0) {
         await this.model.gioHang.delete({
@@ -135,9 +163,9 @@ export class CartService {
             gio_hang_id: checkCart.gio_hang_id
           }
         })
-
         return successCode(res, body, 200, "Xóa sản phẩm thành công !")
       }
+
 
       let update = await this.model.gioHang.update({
         where: {
@@ -147,7 +175,7 @@ export class CartService {
           isDelete: false
         },
         data: {
-          so_luong
+          so_luong: checkCart.so_luong + so_luong
         }
       })
 
@@ -160,25 +188,79 @@ export class CartService {
   }
 
   // ============================================
-  //               DELETE CART 
+  //                 PUT CART
   // ============================================
-  async deleteCart(id: number, res: Response) {
+  async putCart(req: Request, body: CreateCartDto, res: Response) {
     try {
+      // -------------------TOKEN----------------------------
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return failCode(res, '', 401, 'Yêu cầu token!');
+      }
+      const user = this.jwtService.verify(token);
+      let nguoi_dung_id = +user.data.nguoi_dung_id
+      // ---------------------------------------------------
+
+      let { san_pham_id, so_luong } = body;
 
       let checkCartID = await this.model.gioHang.findFirst({
         where: {
-          gio_hang_id: +id,
+          nguoi_dung_id,
+          san_pham_id,
+          isDelete: false
+        }
+      });
+
+
+      if (checkCartID === null) {
+        return failCode(res, '', 400, "Không tìm thấy người dùng ID và sản phẩm này !")
+      }
+
+      let update = await this.model.gioHang.update({
+        where: {
+          gio_hang_id: checkCartID.gio_hang_id,
+          nguoi_dung_id,
+          san_pham_id
+        }, data: {
+          so_luong
+        }
+      })
+      successCode(res, update, 200, "Thành công !")
+    }
+    catch (error) {
+      console.log("🚀 ~ file: cart.service.ts:226 ~ CartService ~ putCart ~ error:", error);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+  // ============================================
+  //               DELETE CART 
+  // ============================================
+  async deleteCart(req: Request, id: number, res: Response) {
+    try {
+      // -------------------TOKEN----------------------------
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return failCode(res, '', 401, 'Yêu cầu token!');
+      }
+      const user = this.jwtService.verify(token);
+      let nguoi_dung_id = +user.data.nguoi_dung_id
+      // ------------------------------------------------------
+
+      let checkCartID = await this.model.gioHang.findFirst({
+        where: {
+          nguoi_dung_id,
+          san_pham_id: +id,
           isDelete: false
         }
       });
 
       if (checkCartID === null) {
-        return failCode(res, '', 400, "Giỏ hàng ID không tồn tại !")
+        return failCode(res, '', 400, "Sản phẩm không có trong giỏ hàng để xóa !")
       }
 
       await this.model.gioHang.delete({
         where: {
-          gio_hang_id: +id,
+          gio_hang_id: checkCartID.gio_hang_id
         }
       });
 
@@ -189,7 +271,4 @@ export class CartService {
       errorCode(res, "Lỗi BE")
     }
   }
-
-
-
 }

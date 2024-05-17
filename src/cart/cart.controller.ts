@@ -1,5 +1,5 @@
 import { CartService } from './cart.service';
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Request } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,8 +28,11 @@ export class CartController {
   @HttpCode(200)
   @Roles(Role.ADMIN, Role.USER)
   @Get("/")
-  getAll(@Res() res: Response) {
-    return this.cartService.getAll(res)
+  getAll(
+    @Request() req: Request,
+    @Res() res: Response
+  ) {
+    return this.cartService.getAll(req, res)
   }
 
   // ============================================
@@ -48,8 +51,26 @@ export class CartController {
   @HttpCode(201)
   @Roles(Role.ADMIN, Role.USER)
   @Post("/")
-  postCart(@Body() body: CreateCartDto, @Res() res: Response) {
-    return this.cartService.postCart(body, res)
+  postCart(
+    @Request() req: Request,
+    @Body() body: CreateCartDto,
+    @Res() res: Response
+  ) {
+    return this.cartService.postCart(req, body, res)
+  }
+
+  // ============================================
+  //                 PUT CART
+  // ============================================
+  @HttpCode(200)
+  @Roles(Role.ADMIN, Role.USER)
+  @Put('/')
+  putCart(
+    @Request() req: Request,
+    @Body() body: CreateCartDto,
+    @Res() res: Response
+  ) {
+    return this.cartService.putCart(req, body, res)
   }
 
   // ============================================
@@ -57,9 +78,12 @@ export class CartController {
   // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN, Role.USER)
-  @Delete("/:id")
-  deleteCart(@Param("id") id: number, @Res() res: Response) {
-    return this.cartService.deleteCart(id, res)
+  @Delete("/:ProductId")
+  deleteCart(
+    @Param("ProductId") id: number,
+    @Request() req: Request,
+    @Res() res: Response) {
+    return this.cartService.deleteCart(req, id, res)
   }
 
 }

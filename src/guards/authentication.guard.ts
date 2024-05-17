@@ -24,7 +24,7 @@ export class AuthenticationGuard implements CanActivate {
             request.user = this.jwtService.verify(token);
             // console.log(request.user)
         } catch (error) {
-            console.log("🚀 ~ file: authentication.guard.ts:21 ~ AuthenticationGuard ~ canActivate ~ error:", error)
+            console.log("🚀 TOKEN không hợp lệ ~ file: authentication.guard.ts:21 ~ AuthenticationGuard ~ canActivate ~ error:", error)
             throw new UnauthorizedException();
         }
 
