@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpCode, Res, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserSignInDto } from './dto/auth.dto';
+import { ForgotPasswordDto, UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -33,13 +33,15 @@ export class AuthController {
     return this.authService.signUp(body, res);
   }
 
-  // // =============================================
-  // //                  QUÊN MẬT KHẨU
-  // // =============================================
-  // @HttpCode(200)
-  // @Get("/forgot-password")
-  // sendMail(@Res() res: Response) {
-  //   return this.authService.sendMail(res)
-  // }
+  // =============================================
+  //                  QUÊN MẬT KHẨU
+  // =============================================
+  @HttpCode(200)
+  @Post("/forgot-password")
+  sendMailer(
+    @Body() body: ForgotPasswordDto,
+    @Res() res: Response) {
+    return this.authService.sendMailer(body, res)
+  }
 
 }

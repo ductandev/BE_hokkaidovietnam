@@ -6,3 +6,8 @@ export class UserSignInDto {
     @ApiProperty()
     mat_khau: string
 }
+
+export class ForgotPasswordDto {
+    @ApiProperty()
+    email: string
+}

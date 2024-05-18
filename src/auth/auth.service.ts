@@ -6,15 +6,17 @@ import { Response } from 'express';
 // THƯ VIỆN MÃ HÓA PASSWORD
 // yarn add bcrypt
 import * as bcrypt from 'bcrypt';
-import { UserSignInDto } from './dto/auth.dto';
+import { ForgotPasswordDto, UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
 // Thư viện gửi email
+import { MailerService } from '@nestjs-modules/mailer';
 
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    private readonly mailService: MailerService
   ) { }
 
   model = new PrismaClient();
@@ -151,8 +153,50 @@ export class AuthService {
   // =============================================
   //                  QUÊN MẬT KHẨU
   // =============================================
+  async sendMailer(body: ForgotPasswordDto, res: Response) {
+    try {
+      let { email } = body
 
+      let checkEmail = await this.model.nguoiDung.findFirst({
+        where: {
+          email,
+          vai_tro_id: 2,
+          isDelete: false
+        }
+      })
 
+      if (checkEmail === null) {
+        return failCode(res, '', 400, "Email không tồn tại hoặc chưa đăng ký !")
+      }
+
+      let token = this.jwtService.sign({ data: checkEmail }, { expiresIn: '15m', secret: 'NODE' },); // Khóa bí mật bên files "jwt.strategy.ts"
+
+      // // Tạo OTP ngẫu nhiên 6 chữ số từ 000000 đến 999999
+      const otp = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+
+      const message = `
+      <h1>Quên mật khẩu</h1>
+      <p>Dear ${checkEmail.ho_ten},</p>
+      <p>Đây là mã xác nhận thay đổi mật khẩu:</p>
+      <h2 style="color: blue;">${otp}</h2>
+      <a href="https://hokkaidovietnam.com/forgot-password/${token}">Vui lòng nhấn vào đây để đổi mật khẩu.</a>
+      <p>Mã có hiệu lực 15 phút.</p>
+      <p>${token}</p>
+    `;
+
+      let data = await this.mailService.sendMail({
+        from: 'No Reply <daotaotainangtrevn@gmail.com>',
+        to: email,
+        subject: `How to Send Emails with Nodemailer`,
+        html: message, // Sử dụng thuộc tính html thay vì text
+      });
+
+      successCode(res, data, 201, 'Gửi xác thực email thành công! Vui lòng đăng nhập Email để đổi mật khẩu !');
+    }
+    catch (error) {
+      errorCode(res, 'Lỗi BE');
+    }
+  }
 
 
 }
