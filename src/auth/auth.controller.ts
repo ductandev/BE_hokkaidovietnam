@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, Param, Delete, HttpCode, Res, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Res, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
@@ -38,8 +38,8 @@ export class AuthController {
   // // =============================================
   // @HttpCode(200)
   // @Get("/forgot-password")
-  // sendMailer(@Res() res: Response) {
-  //   return this.authService.sendMailer(res)
+  // sendMail(@Res() res: Response) {
+  //   return this.authService.sendMail(res)
   // }
 
 }
