@@ -81,7 +81,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu sản phẩm được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -114,7 +114,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -162,7 +162,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -195,7 +195,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -239,7 +239,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -268,7 +268,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -312,7 +312,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -341,7 +341,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -385,7 +385,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -414,7 +414,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -462,7 +462,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu số điện thoại được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -495,7 +495,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);

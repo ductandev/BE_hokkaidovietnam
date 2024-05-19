@@ -40,7 +40,7 @@ export class CartService {
       const sanPhamArray = data.map(item => ({
         ...item.SanPham,
         so_luong: item.so_luong
-      }));
+      })).reverse();
 
       if (data.length === 0) {
         return successCode(res, sanPhamArray, 200, "Người dùng chưa thêm sản phẩm vào giỏ hàng !")
