@@ -27,6 +27,9 @@ export class ProductService {
       let data = await this.model.sanPham.findMany({
         where: {
           isDelete: false
+        },
+        orderBy: {
+          san_pham_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -75,6 +78,9 @@ export class ProductService {
               contains: search   // LIKE '%nameProduct%'
             },
             isDelete: false
+          },
+          orderBy: {
+            san_pham_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -108,6 +114,9 @@ export class ProductService {
           },
           loai_san_pham_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          san_pham_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -189,6 +198,9 @@ export class ProductService {
             contains: nameProduct   // LIKE '%nameProduct%'
           },
           isDelete: false
+        },
+        orderBy: {
+          san_pham_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
