@@ -14,7 +14,7 @@ export class AuthenticationGuard implements CanActivate {
 
             // ⭐ LẤY TÁCH TOKEN RA KHỎI CHUỔI
             const token = request.headers.authorization.split(' ')[1];
-            console.log(token);
+            // console.log(token);
 
 
             if (!token) {

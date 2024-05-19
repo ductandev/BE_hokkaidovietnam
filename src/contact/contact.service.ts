@@ -30,7 +30,7 @@ export class ContactService {
         return successCode(res, data, 200, "Chưa có liên hệ nào được thêm vào dữ liệu")
       }
 
-      successCode(res, data, 200, "Thành công !")
+      successCode(res, data.reverse(), 200, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: contact.service.ts:32 ~ getAll ~ exception:", exception);
@@ -81,7 +81,7 @@ export class ContactService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu liên hệ được tìm thấy")
         }
 
-        return successCodeProduct(res, data, 200, total.length, "Thành công !")
+        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
       }
 
       let total = await this.model.lienHe.findMany({
@@ -117,7 +117,7 @@ export class ContactService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data, 200, total.length, "Thành công !")
+      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: contact.service.ts:115 ~ ContactService ~ getAllPagination ~ exception:", exception);
