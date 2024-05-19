@@ -21,6 +21,9 @@ export class ContactService {
         where: {
           isDelete: false
         },
+        orderBy: {
+          lien_he_id: 'desc' // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
           TrangThaiLienHe: true
         }
@@ -30,7 +33,7 @@ export class ContactService {
         return successCode(res, data, 200, "Chưa có liên hệ nào được thêm vào dữ liệu")
       }
 
-      successCode(res, data.reverse(), 200, "Thành công !")
+      successCode(res, data, 200, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: contact.service.ts:32 ~ getAll ~ exception:", exception);
@@ -72,6 +75,9 @@ export class ContactService {
             },
             isDelete: false
           },
+          orderBy: {
+            lien_he_id: 'desc' // Đảm bảo lấy dữ liệu mới nhất trước
+          },
           include: {
             TrangThaiLienHe: true
           }
@@ -81,7 +87,7 @@ export class ContactService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu liên hệ được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.lienHe.findMany({
@@ -108,6 +114,9 @@ export class ContactService {
           trang_thai_lien_he_id: +typeID,
           isDelete: false
         },
+        orderBy: {
+          lien_he_id: 'desc' // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
           TrangThaiLienHe: true
         }
@@ -117,7 +126,7 @@ export class ContactService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: contact.service.ts:115 ~ ContactService ~ getAllPagination ~ exception:", exception);
@@ -217,7 +226,7 @@ export class ContactService {
   }
 
   // ============================================
-  //                DELETE COMMENT 
+  //                DELETE CONTACT 
   // ============================================
   async deleteContact(id: number, res: Response) {
     try {
