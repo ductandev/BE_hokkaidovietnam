@@ -149,6 +149,48 @@ export class AuthService {
   }
 
   // =============================================
+  //                  RELOAD
+  // =============================================
+  async getReload(req: Request, res: Response) {
+    try {
+      // ------------------- CHECK TOKEN---------------------
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return failCode(res, '', 401, 'Yêu cầu token !');
+      }
+      const user = this.jwtService.verify(token);
+      let nguoi_dung_id = +user.data.nguoi_dung_id
+      // ----------------------------------------------------
+      let checkUser = await this.model.nguoiDung.findFirst({
+        where: {
+          nguoi_dung_id,
+          // Loại bỏ trường hợp có "vai_tro_id = 3" hoặc "mat_khau = rỗng "
+          NOT: [
+            { vai_tro_id: 3 },
+            { mat_khau: '' }
+          ],
+          isDelete: false
+        }
+      })
+
+      if (checkUser === null) {
+        failCode(res, checkUser, 400, "Người dùng ID không tồn tại, vui lòng kiểm tra lại token !")
+      }
+
+      // sử dụng destructuring để loại bỏ trường "mat_khau" khỏi đối tượng checkUser.
+      const { mat_khau, ...userWithoutPassword } = checkUser;
+
+      successCode(res, userWithoutPassword, 200, 'Login thành công !');
+    }
+    catch (exception) {
+      console.log('🚀 ~ file: auth.service.ts:46 ~ AuthService ~ signIn ~ exception:', exception,);
+      errorCode(res, 'Lỗi BE');
+    }
+  }
+
+
+
+  // =============================================
   //                  QUÊN MẬT KHẨU
   // =============================================
 
