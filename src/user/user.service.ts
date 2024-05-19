@@ -88,6 +88,9 @@ export class UserService {
                         },
                         isDelete: false
                     },
+                    orderBy: {
+                        nguoi_dung_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
+                    },
                     include: {
                         DonHang: {
                             include: {
@@ -127,6 +130,9 @@ export class UserService {
                     },
                     vai_tro_id: +vaiTroID,
                     isDelete: false
+                },
+                orderBy: {
+                    nguoi_dung_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
                 },
                 include: {
                     DonHang: {
@@ -212,6 +218,9 @@ export class UserService {
                         contains: userName      // LIKE '%userName%'
                     },
                     isDelete: false
+                },
+                orderBy: {
+                    nguoi_dung_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
                 }
             });
 
