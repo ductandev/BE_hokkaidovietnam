@@ -32,6 +32,9 @@ export class CartService {
           nguoi_dung_id,
           isDelete: false,
         },
+        orderBy: {
+          gio_hang_id: 'desc'     // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
           SanPham: true
         }
@@ -40,7 +43,7 @@ export class CartService {
       const sanPhamArray = data.map(item => ({
         ...item.SanPham,
         so_luong: item.so_luong
-      })).reverse();
+      }));
 
       if (data.length === 0) {
         return successCode(res, sanPhamArray, 200, "Người dùng chưa thêm sản phẩm vào giỏ hàng !")

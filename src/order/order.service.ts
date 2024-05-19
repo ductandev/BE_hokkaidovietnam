@@ -22,6 +22,9 @@ export class OrderService {
         where: {
           isDelete: false
         },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
           HinhThucThanhToan: true,
           TrangThaiDonHang: true,
@@ -74,6 +77,9 @@ export class OrderService {
               contains: search   // LIKE '%nameProduct%'
             },
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -81,7 +87,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu sản phẩm được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -107,6 +113,9 @@ export class OrderService {
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -114,7 +123,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -155,6 +164,9 @@ export class OrderService {
               contains: search   // LIKE '%nameProduct%'
             },
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -162,7 +174,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -188,6 +200,9 @@ export class OrderService {
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -195,7 +210,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -232,6 +247,9 @@ export class OrderService {
           where: {
             phuong_id,
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -239,7 +257,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -261,6 +279,9 @@ export class OrderService {
           phuong_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -268,7 +289,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -305,6 +326,9 @@ export class OrderService {
           where: {
             quan_id,
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -312,7 +336,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -334,6 +358,9 @@ export class OrderService {
           quan_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -341,7 +368,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -378,6 +405,9 @@ export class OrderService {
           where: {
             tinh_thanh_id,
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -385,7 +415,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -407,6 +437,9 @@ export class OrderService {
           tinh_thanh_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -414,7 +447,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
@@ -455,6 +488,9 @@ export class OrderService {
               contains: so_dien_thoai
             },
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -462,7 +498,7 @@ export class OrderService {
           return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu số điện thoại được tìm thấy")
         }
 
-        return successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+        return successCodeProduct(res, data, 200, total.length, "Thành công !")
       }
 
       let total = await this.model.donHang.findMany({
@@ -488,6 +524,9 @@ export class OrderService {
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -495,7 +534,7 @@ export class OrderService {
         return successCodeProduct(res, data, 200, total.length, "Không tìm thấy dữ liệu bạn đang tìm !")
       }
 
-      successCodeProduct(res, data.reverse(), 200, total.length, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
