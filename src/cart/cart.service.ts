@@ -46,7 +46,7 @@ export class CartService {
       }));
 
       if (data.length === 0) {
-        return successCode(res, sanPhamArray, 200, "Người dùng chưa thêm sản phẩm vào giỏ hàng !")
+        return successCode(res, sanPhamArray, 200, "Người dùng chưa thêm sản phẩm nào vào giỏ hàng !")
       }
 
       successCode(res, sanPhamArray, 200, "Thành công !")

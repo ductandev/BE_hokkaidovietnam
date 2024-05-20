@@ -45,7 +45,7 @@ export class CreateOrderDto {
     @ApiProperty()
     ghi_chu: string
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     hinh_thuc_thanh_toan_id: number
 
     @ApiProperty()
@@ -62,4 +62,7 @@ export class CreateOrderDto {
 
     // @ApiProperty()
     // trang_thai_don_hang_id: number
+
+    @ApiProperty({ type: 'number', required: false })
+    nguoi_dung_id: number
 }
