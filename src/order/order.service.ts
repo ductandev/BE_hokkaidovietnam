@@ -22,6 +22,9 @@ export class OrderService {
         where: {
           isDelete: false
         },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
           HinhThucThanhToan: true,
           TrangThaiDonHang: true,
@@ -74,6 +77,9 @@ export class OrderService {
               contains: search   // LIKE '%nameProduct%'
             },
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -107,6 +113,9 @@ export class OrderService {
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -155,6 +164,9 @@ export class OrderService {
               contains: search   // LIKE '%nameProduct%'
             },
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -188,6 +200,9 @@ export class OrderService {
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -232,6 +247,9 @@ export class OrderService {
           where: {
             phuong_id,
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -261,6 +279,9 @@ export class OrderService {
           phuong_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -305,6 +326,9 @@ export class OrderService {
           where: {
             quan_id,
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -334,6 +358,9 @@ export class OrderService {
           quan_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -378,6 +405,9 @@ export class OrderService {
           where: {
             tinh_thanh_id,
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -407,6 +437,9 @@ export class OrderService {
           tinh_thanh_id,
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -455,6 +488,9 @@ export class OrderService {
               contains: so_dien_thoai
             },
             isDelete: false
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
 
@@ -488,6 +524,9 @@ export class OrderService {
           },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
@@ -618,14 +657,13 @@ export class OrderService {
   // ============================================
   async postOrder(body: CreateOrderDto, res: Response) {
     try {
-      const moment = require('moment-timezone');
-
-      let { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham, hinh_thuc_thanh_toan_id } = body
+      const { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham, hinh_thuc_thanh_toan_id } = body
+      const { nguoi_dung_id, ...bodyNoUserID } = body
 
       body.thoi_gian_dat_hang = new Date();
       body.thoi_gian_dat_hang.setHours(body.thoi_gian_dat_hang.getHours() + 7)
 
-      body.hinh_thuc_thanh_toan_id = +hinh_thuc_thanh_toan_id
+      bodyNoUserID.hinh_thuc_thanh_toan_id = +hinh_thuc_thanh_toan_id
 
       let checkUserPhone = await this.model.nguoiDung.findFirst({
         where: {
@@ -652,7 +690,7 @@ export class OrderService {
       }
 
       let data = await this.model.donHang.create({
-        data: body
+        data: bodyNoUserID
       })
 
       // Thêm từng chi tiết đơn hàng vào bảng chi tiết đơn hàng
@@ -665,6 +703,24 @@ export class OrderService {
             don_gia: sp.don_gia
           }
         })
+
+        // Xóa giỏ hàng sau khi đặt hàng
+        if (checkUserPhone.vai_tro_id === 2 && nguoi_dung_id) {
+          const findCart = await this.model.gioHang.findFirst({
+            where: {
+              nguoi_dung_id: +nguoi_dung_id,
+              san_pham_id: sp.san_pham_id,
+              so_luong: sp.so_luong,
+              isDelete: false
+            }
+          });
+
+          if (findCart) {
+            await this.model.gioHang.delete({
+              where: findCart
+            })
+          }
+        }
       }
 
       successCode(res, data, 200, "Thêm đơn hàng mới thành công !")

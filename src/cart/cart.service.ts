@@ -18,7 +18,7 @@ export class CartService {
   // ============================================ 
   async getAll(req: Request, res: Response) {
     try {
-      // -------------------TOKEN----------------------------
+      // ------------------- CHECK TOKEN---------------------
       const token = req.headers['authorization']?.split(' ')[1];
       if (!token) {
         return failCode(res, '', 401, 'Yêu cầu token!');
@@ -32,17 +32,24 @@ export class CartService {
           nguoi_dung_id,
           isDelete: false,
         },
+        orderBy: {
+          gio_hang_id: 'desc'     // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
-          NguoiDung: true,
           SanPham: true
         }
       });
 
+      const sanPhamArray = data.map(item => ({
+        ...item.SanPham,
+        so_luong: item.so_luong
+      }));
+
       if (data.length === 0) {
-        return successCode(res, data, 200, "Người dùng chưa thêm sản phẩm vào giỏ hàng !")
+        return successCode(res, sanPhamArray, 200, "Người dùng chưa thêm sản phẩm nào vào giỏ hàng !")
       }
 
-      successCode(res, data, 200, "Thành công !")
+      successCode(res, sanPhamArray, 200, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: cart.service.ts:32 ~ CartService ~ getAll ~ exception:", exception);

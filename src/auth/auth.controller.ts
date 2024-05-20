@@ -1,8 +1,14 @@
-import { Controller, Post, Body, HttpCode, Res, Get } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Res, Get, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ForgotPasswordDto, UserSignInDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/user/entities/role.enum';
+
+import { AuthenticationGuard } from 'src/guards/authentication.guard';
+import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import { Response } from 'express';
 
 
@@ -42,6 +48,21 @@ export class AuthController {
     @Body() body: ForgotPasswordDto,
     @Res() res: Response) {
     return this.authService.sendMailer(body, res)
+  }
+
+  // =============================================
+  //                  RELOAD
+  // =============================================
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @Get("/reload")
+  getReload(
+    @Request() req: Request,
+    @Res() res: Response
+  ) {
+    return this.authService.getReload(req, res)
   }
 
 }

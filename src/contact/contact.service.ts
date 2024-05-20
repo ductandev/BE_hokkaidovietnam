@@ -21,6 +21,9 @@ export class ContactService {
         where: {
           isDelete: false
         },
+        orderBy: {
+          lien_he_id: 'desc' // Đảm bảo lấy dữ liệu mới nhất trước
+        },
         include: {
           TrangThaiLienHe: true
         }
@@ -72,6 +75,9 @@ export class ContactService {
             },
             isDelete: false
           },
+          orderBy: {
+            lien_he_id: 'desc' // Đảm bảo lấy dữ liệu mới nhất trước
+          },
           include: {
             TrangThaiLienHe: true
           }
@@ -107,6 +113,9 @@ export class ContactService {
           },
           trang_thai_lien_he_id: +typeID,
           isDelete: false
+        },
+        orderBy: {
+          lien_he_id: 'desc' // Đảm bảo lấy dữ liệu mới nhất trước
         },
         include: {
           TrangThaiLienHe: true
@@ -217,7 +226,7 @@ export class ContactService {
   }
 
   // ============================================
-  //                DELETE COMMENT 
+  //                DELETE CONTACT 
   // ============================================
   async deleteContact(id: number, res: Response) {
     try {
