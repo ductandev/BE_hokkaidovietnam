@@ -6,15 +6,17 @@ import { Response } from 'express';
 // THƯ VIỆN MÃ HÓA PASSWORD
 // yarn add bcrypt
 import * as bcrypt from 'bcrypt';
-import { UserSignInDto } from './dto/auth.dto';
+import { ForgotPasswordDto, UserSignInDto, resetPasswordDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
 // Thư viện gửi email
+import { MailerService } from '@nestjs-modules/mailer';
 
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    private readonly mailService: MailerService
   ) { }
 
   model = new PrismaClient();
@@ -183,18 +185,111 @@ export class AuthService {
       successCode(res, userWithoutPassword, 200, 'Login thành công !');
     }
     catch (exception) {
-      console.log('🚀 ~ file: auth.service.ts:46 ~ AuthService ~ signIn ~ exception:', exception,);
+      console.log("🚀 ~ file: auth.service.ts:188 ~ AuthService ~ getReload ~ exception:", exception);
       errorCode(res, 'Lỗi BE');
     }
   }
 
+  // =============================================
+  //        GỬI THƯ XÁC THỰC QUÊN MẬT KHẨU 
+  // =============================================
+  async sendMailer(body: ForgotPasswordDto, res: Response) {
+    try {
+      let { email } = body
 
+      let checkEmail = await this.model.nguoiDung.findFirst({
+        where: {
+          email,
+          vai_tro_id: 2,
+          isDelete: false
+        }
+      })
+
+      if (checkEmail === null) {
+        return failCode(res, '', 400, "Email không tồn tại hoặc chưa đăng ký !")
+      }
+
+      let token = this.jwtService.sign({ data: checkEmail }, { expiresIn: '15m', secret: 'NODE' },); // Khóa bí mật bên files "jwt.strategy.ts"
+
+      // // Tạo OTP ngẫu nhiên 6 chữ số từ 000000 đến 999999
+      // const otp = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+
+      const message = `
+      <h1>Quên mật khẩu</h1>
+      <p> <b>Dear</b> ${checkEmail.ho_ten},</p>
+      <p>Đây là thư xác nhận thay đổi mật khẩu:</p>
+      <a href="${process.env.URL}/forgot-password/${token}">Vui lòng nhấn vào đây để đổi mật khẩu.</a>
+      <p><b>Liên kết có hiệu lực 15 phút.</b></p>
+      <p>${token}</p>
+    `;
+
+      let data = await this.mailService.sendMail({
+        from: 'No Reply <daotaotainangtrevn@gmail.com>',
+        to: email,
+        subject: `Thay đổi mật khẩu người dùng Hokkaido Việt Nam`,
+        html: message, // Sử dụng thuộc tính html thay vì text
+      });
+
+      await this.model.resetPassword.create({
+        data: {
+          token
+        }
+      })
+
+      successCode(res, data, 200, 'Gửi xác thực email thành công! Vui lòng đăng nhập Email để đổi mật khẩu !');
+    }
+    catch (error) {
+      console.log("🚀 ~ file: auth.service.ts:235 ~ AuthService ~ sendMailer ~ error:", error);
+      errorCode(res, 'Lỗi BE');
+    }
+  }
 
   // =============================================
-  //                  QUÊN MẬT KHẨU
+  //              RESET MẬT KHẨU
   // =============================================
+  async resetPassword(req: Request, body: resetPasswordDto, res: Response) {
+    try {
+      // ------------------- CHECK TOKEN---------------------
+      const token = req.headers['authorization']?.split(' ')[1];
+      if (!token) {
+        return failCode(res, '', 401, 'Yêu cầu token !');
+      }
+      const user = this.jwtService.verify(token);
+      // ----------------------------------------------------
 
+      // Kiểm tra token trog DB có tồn tại hay không 
+      const checkTokenDB = await this.model.resetPassword.findFirst({
+        where: {
+          token
+        }
+      })
 
+      if (!checkTokenDB) {
+        return failCode(res, '', 401, "Dữ liệu Token không tồn tại !")
+      }
 
+      let { newPassword } = body;
+
+      // Cập nhật mật khẩu
+      const updateUser = await this.model.nguoiDung.update({
+        where: user.data,
+        data: {
+          mat_khau: await bcrypt.hash(newPassword, 10),
+        }
+      })
+
+      // Xóa token trong DB
+      await this.model.resetPassword.delete({
+        where: {
+          id: checkTokenDB.id
+        }
+      })
+
+      successCode(res, updateUser, 200, "Cập nhật mật khẩu thành công !")
+    } catch (error) {
+      console.log("🚀 ~ file: auth.service.ts:271 ~ AuthService ~ resetPassword ~ error:", error);
+      errorCode(res, "Lỗi BE")
+    }
+  }
 
 }

@@ -212,3 +212,8 @@ model MaGiam {
   ngay_het_han DateTime? @db.DateTime(0)
   isDelete     Boolean?  @default(false)
 }
+
+model ResetPassword {
+  id    Int     @id @default(autoincrement())
+  token String? @db.Text
+}
