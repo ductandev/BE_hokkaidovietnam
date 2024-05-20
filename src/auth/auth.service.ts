@@ -220,7 +220,6 @@ export class AuthService {
       <p>Đây là thư xác nhận thay đổi mật khẩu:</p>
       <a href="${process.env.URL}/forgot-password/${token}">Vui lòng nhấn vào đây để đổi mật khẩu.</a>
       <p><b>Liên kết có hiệu lực 15 phút.</b></p>
-      <p>${token}</p>
     `;
 
       let data = await this.mailService.sendMail({
