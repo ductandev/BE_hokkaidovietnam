@@ -11,3 +11,8 @@ export class ForgotPasswordDto {
     @ApiProperty()
     email: string
 }
+
+export class resetPasswordDto {
+    @ApiProperty()
+    newPassword: string
+}

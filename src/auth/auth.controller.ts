@@ -1,6 +1,6 @@
-import { Controller, Post, Body, HttpCode, Res, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Res, Get, UseGuards, Request, Req, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ForgotPasswordDto, UserSignInDto } from './dto/auth.dto';
+import { ForgotPasswordDto, UserSignInDto, resetPasswordDto } from './dto/auth.dto';
 import { UserSignUpType } from './entities/auth.entity';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -40,7 +40,22 @@ export class AuthController {
   }
 
   // =============================================
-  //                  QUÊN MẬT KHẨU
+  //                  RELOAD
+  // =============================================
+  @ApiBearerAuth()
+  @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN, Role.USER)
+  @Get("/reload")
+  getReload(
+    @Req() req: Request,
+    @Res() res: Response
+  ) {
+    return this.authService.getReload(req, res)
+  }
+
+  // =============================================
+  //        GỬI THƯ XÁC THỰC QUÊN MẬT KHẨU 
   // =============================================
   @HttpCode(200)
   @Post("/forgot-password")
@@ -51,18 +66,18 @@ export class AuthController {
   }
 
   // =============================================
-  //                  RELOAD
+  //              RESET MẬT KHẨU
   // =============================================
   @ApiBearerAuth()
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Get("/reload")
-  getReload(
-    @Request() req: Request,
-    @Res() res: Response
-  ) {
-    return this.authService.getReload(req, res)
+  @Put("/reset-password")
+  resetPassword(
+    @Req() req: Request,
+    @Body() body: resetPasswordDto,
+    @Res() res: Response) {
+    return this.authService.resetPassword(req, body, res)
   }
 
 }
