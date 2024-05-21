@@ -90,6 +90,29 @@ export class NewsService {
   }
 
   // ============================================
+  //            GET ALL NEWS SUMARY
+  // ============================================
+  async getNewsSummary(res: Response) {
+    try {
+      const totalNews = await this.model.tinTuc.findMany({
+        where: {
+          isDelete: false
+        }
+      });
+
+      const content = {
+        totalNews: totalNews.length
+      }
+
+      successCode(res, content, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ getOrderSummary ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
   //           GET NAME NEWS BY ID
   // ============================================ 
   async getNewsById(id: number, res: Response) {

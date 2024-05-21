@@ -53,6 +53,16 @@ export class NewsController {
   }
 
   // ============================================
+  //            GET ALL NEWS SUMARY
+  // ============================================
+  @HttpCode(200)
+  // @Roles(Role.ADMIN)
+  @Get("summary")
+  getNewsSummary(@Res() res: Response) {
+    return this.newsService.getNewsSummary(res)
+  }
+
+  // ============================================
   //              GET NEWS BY ID
   // ============================================ 
   @HttpCode(200)
