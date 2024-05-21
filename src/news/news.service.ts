@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { errorCode, failCode, successCode } from 'src/Config/response';
+import { errorCode, failCode, successCode, successCodeProduct } from 'src/Config/response';
 
 
 import { CreateNewsDto } from './dto/create-news.dto';
@@ -9,7 +9,7 @@ import { Response } from 'express';
 // =================CLOUDYNARY=====================
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryResponse } from '../cloudinary/cloudinary-response';
-import streamifier from 'streamifier';
+const streamifier = require('streamifier');
 
 
 @Injectable()
@@ -43,26 +43,45 @@ export class NewsService {
   // ============================================
   //        GET PANIGATION LIST NEWS
   // ============================================
-  async getPanigationNews(pageIndex: number, pageSize: number, res: Response) {
+  async getPanigationNews(pageIndex: number, pageSize: number, search: string, res: Response) {
     try {
       if (pageIndex <= 0 || pageSize <= 0) {
         return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
       }
       let index = (pageIndex - 1) * pageSize;
 
+      let total = await this.model.tinTuc.findMany({
+        where: {
+          tieu_de: {
+            contains: search   // LIKE '%nameProduct%'
+          },
+          isDelete: false
+        }
+      });
+
+      if (total.length === 0) {
+        return successCode(res, total, 200, "Không có dữ liệu tin tức được tìm thấy !")
+      }
+
       let data = await this.model.tinTuc.findMany({
         skip: +index,     // Sử dụng skip thay vì offset
         take: +pageSize,  // Sử dụng take thay vì limit
         where: {
+          tieu_de: {
+            contains: search    // LIKE '%nameProduct%'
+          },
           isDelete: false,
+        },
+        orderBy: {
+          tin_tuc_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
         }
       });
 
       if (data.length === 0) {
-        return successCode(res, data, 200, "Không có dữ liệu Tin tức nào được tìm thấy !")
+        return successCodeProduct(res, data, 200, total.length, "Không có dữ liệu Tin tức nào được tìm thấy !")
       }
 
-      successCode(res, data, 200, "Thành công !")
+      successCodeProduct(res, data, 200, total.length, "Thành công !")
     }
     catch (exception) {
       console.log("🚀 ~ file: news.service.ts:69 ~ NewsService ~ getPanigationNews ~ exception:", exception);
@@ -172,7 +191,7 @@ export class NewsService {
       successCode(res, newData, 201, 'Thêm tin tức thành công !');
     }
     catch (exception) {
-      console.log("🚀 ~ file: news.service.ts:176 ~ NewsService ~ postNews ~ exception:", exception);
+      console.log("🚀 ~ file: news.service.ts:194 ~ NewsService ~ postNews ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }

@@ -41,9 +41,15 @@ export class NewsController {
   getPanigationNews(
     @Query("page") pageIndex: number,
     @Query("limit") pageSize: number,
+    @Query('search') search: string,
     @Res() res: Response
   ) {
-    return this.newsService.getPanigationNews(pageIndex, pageSize, res)
+    return this.newsService.getPanigationNews(
+      pageIndex,
+      pageSize,
+      search,
+      res
+    );
   }
 
   // ============================================
