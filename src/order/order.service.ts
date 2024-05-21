@@ -660,8 +660,8 @@ export class OrderService {
       const { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham, hinh_thuc_thanh_toan_id } = body
       const { nguoi_dung_id, ...bodyNoUserID } = body
 
-      body.thoi_gian_dat_hang = new Date();
-      body.thoi_gian_dat_hang.setHours(body.thoi_gian_dat_hang.getHours() + 7)
+      bodyNoUserID.thoi_gian_dat_hang = new Date();
+      bodyNoUserID.thoi_gian_dat_hang.setHours(bodyNoUserID.thoi_gian_dat_hang.getHours() + 7)
 
       bodyNoUserID.hinh_thuc_thanh_toan_id = +hinh_thuc_thanh_toan_id
 
