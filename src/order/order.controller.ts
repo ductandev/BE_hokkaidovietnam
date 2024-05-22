@@ -43,14 +43,24 @@ export class OrderController {
     @Query('typeID') typeID: number,
     @Query('page') pageIndex: number,
     @Query('limit') pageSize: number,
-    @Query('search') search: string,
+    @Query('ho_ten') ho_ten: string,
+    @Query('dia_chi') dia_chi: string,
+    @Query('phuong_id') phuong_id: string,
+    @Query('quan_id') quan_id: string,
+    @Query('tinh_thanh_id') tinh_thanh_id: string,
+    @Query('so_dien_thoai') so_dien_thoai: string,
     @Res() res: Response,
   ) {
     return this.orderService.getAllPagination(
       typeID,
       pageIndex,
       pageSize,
-      search,
+      ho_ten,
+      dia_chi,
+      phuong_id,
+      quan_id,
+      tinh_thanh_id,
+      so_dien_thoai,
       res,
     );
   }

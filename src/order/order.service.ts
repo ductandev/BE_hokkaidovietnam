@@ -47,7 +47,7 @@ export class OrderService {
   // ============================================
   //      GET ALL ORDER PAGINATION BY SEARCH NAME
   // ============================================
-  async getAllPagination(typeID: number, pageIndex: number, pageSize: number, search: string, res: Response) {
+  async getAllPagination(typeID: number, pageIndex: number, pageSize: number, ho_ten: string, dia_chi: string, phuong_id: string, quan_id: string, tinh_thanh_id: string, so_dien_thoai: string, res: Response) {
     try {
       if (pageIndex <= 0 || pageSize <= 0) {
         return failCode(res, '', 400, "page và limit phải lớn hơn 0 !")
@@ -58,9 +58,12 @@ export class OrderService {
       if (+typeID === 0) {
         let total = await this.model.donHang.findMany({
           where: {
-            ho_ten: {
-              contains: search   // LIKE '%nameProduct%'
-            },
+            ho_ten: { contains: ho_ten },
+            dia_chi: { contains: dia_chi },
+            phuong_id: { contains: phuong_id },
+            quan_id: { contains: quan_id },
+            tinh_thanh_id: { contains: tinh_thanh_id },
+            so_dien_thoai: { contains: so_dien_thoai },
             isDelete: false
           }
         });
@@ -73,9 +76,12 @@ export class OrderService {
           skip: +index,     // Sử dụng skip thay vì offset
           take: +pageSize,  // Sử dụng take thay vì limit
           where: {
-            ho_ten: {
-              contains: search   // LIKE '%nameProduct%'
-            },
+            ho_ten: { contains: ho_ten },
+            dia_chi: { contains: dia_chi },
+            phuong_id: { contains: phuong_id },
+            quan_id: { contains: quan_id },
+            tinh_thanh_id: { contains: tinh_thanh_id },
+            so_dien_thoai: { contains: so_dien_thoai },
             isDelete: false
           },
           orderBy: {
@@ -93,9 +99,12 @@ export class OrderService {
       let total = await this.model.donHang.findMany({
         where: {
           trang_thai_don_hang_id: +typeID,
-          ho_ten: {
-            contains: search   // LIKE '%nameProduct%'
-          },
+          ho_ten: { contains: ho_ten },
+          dia_chi: { contains: dia_chi },
+          phuong_id: { contains: phuong_id },
+          quan_id: { contains: quan_id },
+          tinh_thanh_id: { contains: tinh_thanh_id },
+          so_dien_thoai: { contains: so_dien_thoai },
           isDelete: false
         }
       });
@@ -108,9 +117,12 @@ export class OrderService {
         skip: +index,     // Sử dụng skip thay vì offset
         take: +pageSize,  // Sử dụng take thay vì limit
         where: {
-          ho_ten: {
-            contains: search   // LIKE '%nameProduct%'
-          },
+          ho_ten: { contains: ho_ten },
+          dia_chi: { contains: dia_chi },
+          phuong_id: { contains: phuong_id },
+          quan_id: { contains: quan_id },
+          tinh_thanh_id: { contains: tinh_thanh_id },
+          so_dien_thoai: { contains: so_dien_thoai },
           trang_thai_don_hang_id: +typeID,
           isDelete: false
         },

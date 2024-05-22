@@ -20,6 +20,7 @@ import { ContactModule } from './contact/contact.module';
 import { CartModule } from './cart/cart.module';
 import { DiscountModule } from './discount/discount.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { UploadModule } from './upload/upload.module';
 
 
 @Module({
@@ -46,7 +47,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
     NewsModule,
     ContactModule,
     CartModule,
-    DiscountModule],
+    DiscountModule,
+    UploadModule],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
 })
