@@ -1,34 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UploadService } from './upload.service';
-import { CreateUploadDto } from './dto/create-upload.dto';
-import { UpdateUploadDto } from './dto/update-upload.dto';
+import { Controller, Post, Body, HttpCode, Res, UseInterceptors, UploadedFiles } from '@nestjs/common';
 
-@Controller('upload')
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+
+import { FileUploadDto_upload } from './dto/upload.dto';
+
+@ApiTags('Upload')
+@Controller('api/upload')
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) {}
+  constructor(private readonly uploadService: UploadService) { }
 
-  @Post()
-  create(@Body() createUploadDto: CreateUploadDto) {
-    return this.uploadService.create(createUploadDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.uploadService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.uploadService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUploadDto: UpdateUploadDto) {
-    return this.uploadService.update(+id, updateUploadDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.uploadService.remove(+id);
+  // ============================================
+  //               POST IMG
+  // ============================================
+  @ApiConsumes('multipart/form-data')
+  @HttpCode(201)
+  @Post('/')
+  @UseInterceptors(FilesInterceptor('hinh_anh', 20))
+  postImgs(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() body: FileUploadDto_upload,
+    @Res() res: Response,
+  ) {
+    return this.uploadService.postImgs(files, body, res);
   }
 }
