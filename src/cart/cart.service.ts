@@ -116,7 +116,10 @@ export class CartService {
       let checkUserID = await this.model.nguoiDung.findFirst({
         where: {
           nguoi_dung_id,
-          vai_tro_id: 2,
+          // vai_tro_id: 2,
+          NOT: [
+            { vai_tro_id: 3 },
+          ],
           isDelete: false
         }
       });
