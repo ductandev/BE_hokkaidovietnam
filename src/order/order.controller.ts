@@ -40,7 +40,7 @@ export class OrderController {
   @Roles(Role.ADMIN)
   @Get('pagination')
   getAllPagination(
-    @Query('typeID') typeID: number,
+    @Query('status') typeID: number,
     @Query('page') pageIndex: number,
     @Query('limit') pageSize: number,
     @Query('ho_ten') ho_ten: string,
