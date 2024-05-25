@@ -717,7 +717,7 @@ export class OrderService {
         })
 
         // Xóa giỏ hàng sau khi đặt hàng
-        if (checkUserPhone.vai_tro_id === 2 && nguoi_dung_id) {
+        if (checkUserPhone.vai_tro_id !== 3 && nguoi_dung_id) {
           const findCart = await this.model.gioHang.findFirst({
             where: {
               nguoi_dung_id: +nguoi_dung_id,
