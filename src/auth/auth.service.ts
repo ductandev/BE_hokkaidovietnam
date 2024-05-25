@@ -220,7 +220,7 @@ export class AuthService {
       <h1>Quên mật khẩu</h1>
       <p> <b>Dear</b> ${checkEmail.ho_ten},</p>
       <p>Đây là thư xác nhận thay đổi mật khẩu:</p>
-      <a href="${process.env.URL}/forgot-password/token=${token}">Vui lòng nhấn vào đây để đổi mật khẩu.</a>
+      <a href="${process.env.URL}/forgot-password?token=${token}">Vui lòng nhấn vào đây để đổi mật khẩu.</a>
       <p><b>Liên kết có hiệu lực 15 phút.</b></p>
     `;
 
