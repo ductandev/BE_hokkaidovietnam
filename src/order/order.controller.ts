@@ -227,6 +227,7 @@ export class OrderController {
   //               PATCH ORDER
   // ============================================
   @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Patch("/:id")
   putOrderById(@Param("id") id: number, @Body() body: UpdateOrderDto, @Res() res: Response) {
