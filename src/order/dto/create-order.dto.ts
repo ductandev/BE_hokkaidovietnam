@@ -66,3 +66,9 @@ export class CreateOrderDto {
     @ApiProperty({ type: 'number', required: false })
     nguoi_dung_id: number
 }
+
+
+export class UpdateOrderDto {
+    @ApiProperty({ type: 'number' })
+    trang_thai_don_hang_id: number
+}

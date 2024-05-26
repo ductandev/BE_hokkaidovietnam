@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Query, Patch } from '@nestjs/common';
 import { OrderService } from './order.service';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -10,7 +10,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { AuthenticationGuard } from 'src/guards/authentication.guard';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CreateOrderDto, UpdateOrderDto } from './dto/create-order.dto';
 
 
 @ApiBearerAuth()
@@ -224,14 +224,14 @@ export class OrderController {
   }
 
   // ============================================
-  //               PUT ORDER
+  //               PATCH ORDER
   // ============================================
-  // @HttpCode(201)
-  // @Roles(Role.ADMIN)
-  // @Put("/:id")
-  // putOrderById(@Param("id") id: number, @Body() body: CreateOrderDto, @Res() res: Response) {
-  //   return this.orderService.putOrderById(id, body, res)
-  // }
+  @HttpCode(200)
+  @Roles(Role.ADMIN)
+  @Patch("/:id")
+  putOrderById(@Param("id") id: number, @Body() body: UpdateOrderDto, @Res() res: Response) {
+    return this.orderService.putOrderById(id, body, res)
+  }
 
   // ============================================
   //            DELETE ORDER  

@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Response } from 'express';
 import { errorCode, failCode, successCode, successCodeProduct } from 'src/Config/response';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CreateOrderDto, UpdateOrderDto } from './dto/create-order.dto';
 
 
 @Injectable()
@@ -744,36 +744,36 @@ export class OrderService {
   }
 
   // ============================================
-  //               PUT ORDER
+  //               PATCH ORDER
   // ============================================
-  // async putOrderById(orderID: number, body: CreateOrderDto, res: Response) {
-  //   try {
+  async putOrderById(orderID: number, body: UpdateOrderDto, res: Response) {
+    try {
 
-  //     let checkOrder = await this.model.donHang.findFirst({
-  //       where: {
-  //         don_hang_id: +orderID,
-  //         isDelete: false
-  //       }
-  //     });
+      let checkOrder = await this.model.donHang.findFirst({
+        where: {
+          don_hang_id: +orderID,
+          isDelete: false
+        }
+      });
 
-  //     if (checkOrder === null) {
-  //       return failCode(res, checkOrder, 400, "Không tìm thấy đơn hàng, vui lòng kiểm tra lại thông tin")
-  //     }
+      if (checkOrder === null) {
+        return failCode(res, checkOrder, 400, "Không tìm thấy đơn hàng, vui lòng kiểm tra lại thông tin")
+      }
 
-  //     let data = await this.model.donHang.update({
-  //       where: {
-  //         don_hang_id: +orderID
-  //       },
-  //       data: body
-  //     })
+      let data = await this.model.donHang.update({
+        where: {
+          don_hang_id: +orderID
+        },
+        data: body
+      })
 
-  //     successCode(res, data, 200, "Cập nhật đơn hàng thành công !")
-  //   }
-  //   catch (exception) {
-  //     console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ putOrderById ~ exception:", exception);
-  //     errorCode(res, "Lỗi BE")
-  //   }
-  // }
+      successCode(res, data, 200, "Cập nhật đơn hàng thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ putOrderById ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
 
   // ============================================
   //                DELETE ORDER  
