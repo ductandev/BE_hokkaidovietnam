@@ -218,9 +218,69 @@ export class ProductService {
 
 
   // ============================================
-  //                POST PRODUCT  
+  //        POST PRODUCT ARRAY STRING IMG
   // ============================================
-  async postProduct(files: Express.Multer.File[], body: CreateProductDto, res: Response) {
+  async postProduct(body: CreateProductDto, res: Response) {
+    try {
+      let {
+        hinh_anh,
+        loai_san_pham_id,
+        ten_san_pham,
+        gia_ban,
+        gia_giam,
+        mo_ta,
+        thong_tin_chi_tiet,
+        don_vi_tinh,
+        trang_thai_san_pham = true,
+        so_luong_trong_kho,
+        san_pham_noi_bat = false,
+        san_pham_lien_quan = [] } = body;
+
+      let data = await this.model.sanPham.findFirst({
+        where: {
+          ten_san_pham,
+          loai_san_pham_id: +loai_san_pham_id,
+          isDelete: false
+        }
+      })
+
+      if (data !== null) {
+        return failCode(res, data, 409, "Sản phẩm này đã tồn tại !")
+      }
+
+      if (typeof san_pham_lien_quan === 'string' && san_pham_lien_quan !== '') {
+        san_pham_lien_quan = JSON.parse(san_pham_lien_quan);
+      }
+
+      let newData = await this.model.sanPham.create({
+        data: {
+          loai_san_pham_id: +loai_san_pham_id,
+          ten_san_pham,
+          gia_ban: +gia_ban,
+          gia_giam: +gia_giam,
+          mo_ta,
+          thong_tin_chi_tiet,
+          don_vi_tinh,
+          trang_thai_san_pham: Boolean(trang_thai_san_pham),
+          so_luong_trong_kho: +so_luong_trong_kho,
+          san_pham_noi_bat: Boolean(san_pham_noi_bat),
+          san_pham_lien_quan,
+          hinh_anh
+        }
+      })
+
+      successCode(res, newData, 201, "Thêm sản phẩm thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: product.service.ts:182 ~ ProductService ~ postProduct ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
+  //             POST PRODUCT FILE IMG
+  // ============================================
+  async postCreateProduct(files: Express.Multer.File[], body: CreateProductDto, res: Response) {
     try {
       let {
         loai_san_pham_id,
@@ -289,7 +349,7 @@ export class ProductService {
       successCode(res, newData, 201, "Thêm sản phẩm thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: product.service.ts:182 ~ ProductService ~ postProduct ~ exception:", exception);
+      console.log("🚀 ~ file: product.service.ts:352 ~ ProductService ~ postCreateProduct ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -322,7 +382,7 @@ export class ProductService {
       successCode(res, newData, 200, "Cập nhật sản phẩm thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: product.service.ts:215 ~ ProductService ~ putProduct ~ exception:", exception);
+      console.log("🚀 ~ file: product.service.ts:385 ~ ProductService ~ putProduct ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -377,7 +437,7 @@ export class ProductService {
       successCode(res, newData, 200, "Cập nhật sản phẩm thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: product.service.ts:270 ~ ProductService ~ putProductImg ~ exception:", exception);
+      console.log("🚀 ~ file: product.service.ts:440 ~ ProductService ~ putProductImg ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -411,7 +471,7 @@ export class ProductService {
       successCode(res, data, 200, "Xóa  sản phẩm thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: product.service.ts:304 ~ ProductService ~ deleteProduct ~ exception:", exception);
+      console.log("🚀 ~ file: product.service.ts:474 ~ ProductService ~ deleteProduct ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }

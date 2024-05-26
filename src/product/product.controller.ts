@@ -90,21 +90,36 @@ export class ProductController {
   }
 
   // ============================================
-  //               POST PRODUCT
+  //        POST PRODUCT ARRAY STRING IMG
+  // ============================================
+  @HttpCode(201)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
+  @Post('/')
+  postProduct(
+    @Body() body: CreateProductDto,
+    @Res() res: Response,
+  ) {
+    return this.productService.postProduct(body, res);
+  }
+
+  // ============================================
+  //             POST PRODUCT FILE IMG
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(201)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Post('/')
+  @Post('/create')
   @UseInterceptors(FilesInterceptor('hinh_anh', 20))
-  postProduct(
+  postCreateProduct(
     @UploadedFiles() files: Express.Multer.File[],
     @Body() body: CreateProductDto,
     @Res() res: Response,
   ) {
-    return this.productService.postProduct(files, body, res);
+    return this.productService.postCreateProduct(files, body, res);
   }
+
 
   // ============================================
   //             PUT PRODUCT INFO
