@@ -616,6 +616,11 @@ export class OrderService {
           isDelete: false
         },
         include: {
+          ChiTietDonHang: {
+            include: {
+              SanPham: true
+            }
+          },
           HinhThucThanhToan: true,
           TrangThaiDonHang: true,
           NguoiDung: true
