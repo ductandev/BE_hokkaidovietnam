@@ -190,7 +190,16 @@ export class UserService {
                     isDelete: false
                 },
                 include: {
-                    DonHang: true
+                    DonHang: {
+                        include: {
+                            ChiTietDonHang: {
+                                include: {
+                                    SanPham: true
+                                }
+                            }
+                        }
+                    }
+
                 }
             });
 
