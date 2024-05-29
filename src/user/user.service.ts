@@ -48,7 +48,7 @@ export class UserService {
             successCode(res, data, 200, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:44 ~ UserService ~ getInforAllUser ~ exception:", exception);
+            console.log("🚀 ~ file: user.service.ts:51 ~ UserService ~ getInforAllUser ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
@@ -150,7 +150,7 @@ export class UserService {
             successCodeProduct(res, data, 200, total.length, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: product.service.ts:109 ~ ProductService ~ getAllProductsByTypeId ~ exception:", exception);
+            console.log("🚀 ~ file: user.service.ts:153 ~ UserService ~ getListUserPanigation ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
@@ -173,7 +173,7 @@ export class UserService {
             successCode(res, content, 200, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: order.service.ts:188 ~ OrderService ~ getOrderSummary ~ exception:", exception);
+            console.log("🚀 ~ file: user.service.ts:176 ~ UserService ~ getUserSummary ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
@@ -210,14 +210,13 @@ export class UserService {
             successCode(res, data, 200, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:102 ~ UserService ~ getInfoUserByUserId ~ exception:", exception);
+            console.log("🚀 ~ file: user.service.ts:213 ~ UserService ~ getInfoUserByUserId ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
 
-
     // ============================================
-    // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
+    //          LẤY ORDER HISTORY BY USER_ID
     // ============================================
     async getOrderHistoryUserId(id: number, res: Response) {
         try {
@@ -262,7 +261,7 @@ export class UserService {
             successCode(res, newData, 200, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:102 ~ UserService ~ getInfoUserByUserId ~ exception:", exception);
+            console.log("🚀 ~ file: user.service.ts:264 ~ UserService ~ getOrderHistoryUserId ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
@@ -292,7 +291,7 @@ export class UserService {
             successCode(res, data, 200, "Thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:111 ~ UserService ~ searchUserByName ~ exception:", exception)
+            console.log("🚀 ~ file: user.service.ts:294 ~ UserService ~ searchUserByName ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }
@@ -396,7 +395,7 @@ export class UserService {
             successCode(res, dataCloudinary, 201, 'Thêm ảnh đại diện thành công !');
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:234 ~ UserService ~ uploadImg ~ exception:", exception)
+            console.log("🚀 ~ file: user.service.ts:398 ~ UserService ~ uploadImg ~ exception:", exception);
             errorCode(res, 'Lỗi BE !');
         }
     }
@@ -458,7 +457,7 @@ export class UserService {
             successCode(res, newData, 200, "Cập nhật thông tin thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:166 ~ UserService ~ updateUserById ~ exception:", exception)
+            console.log("🚀 ~ file: user.service.ts:460 ~ UserService ~ updateUserById ~ exception:", exception);
             errorCode(res, "Lỗi BE");
         }
     }
@@ -492,7 +491,7 @@ export class UserService {
             successCode(res, data, 200, "Đã xóa người dùng thành công !")
         }
         catch (exception) {
-            console.log("🚀 ~ file: user.service.ts:120 ~ UserService ~ deleteUserById ~ exception:", exception)
+            console.log("🚀 ~ file: user.service.ts:494 ~ UserService ~ deleteUserById ~ exception:", exception);
             errorCode(res, "Lỗi BE")
         }
     }

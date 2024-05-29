@@ -82,7 +82,7 @@ export class UserController {
     }
 
     // ============================================
-    // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
+    //          LẤY ORDER HISTORY BY USER_ID
     // ============================================
     @HttpCode(200)
     @Roles(Role.ADMIN, Role.USER)
