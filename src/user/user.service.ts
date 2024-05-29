@@ -217,6 +217,58 @@ export class UserService {
 
 
     // ============================================
+    // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
+    // ============================================
+    async getOrderHistoryUserId(id: number, res: Response) {
+        try {
+            let data = await this.model.nguoiDung.findFirst({
+                where: {
+                    nguoi_dung_id: +id,
+                    isDelete: false
+                },
+                include: {
+                    DonHang: {
+                        include: {
+                            ChiTietDonHang: {
+                                include: {
+                                    SanPham: true
+                                }
+                            }
+                        }
+                    }
+
+                }
+            });
+
+            if (data === null) {
+                return failCode(res, data, 400, "Người dùng không tồn tại !")
+            }
+
+            // Map dữ liệu để tạo ra mảng mới
+            const newData = data.DonHang.flatMap(donHang =>
+                donHang.ChiTietDonHang.map(chiTiet => ({
+                    don_hang_id: donHang.don_hang_id,
+                    san_pham_id: chiTiet.san_pham_id,
+                    so_luong: chiTiet.so_luong,
+                    don_gia: chiTiet.don_gia,
+                    tong_tien: donHang.tong_tien,
+                    thoi_gian_dat_hang: new Date(donHang.thoi_gian_dat_hang),
+                    hinh_anh: chiTiet.SanPham.hinh_anh[0],
+                    ten_san_pham: chiTiet.SanPham.ten_san_pham,
+                    trang_thai_don_hang_id: donHang.trang_thai_don_hang_id
+                }))
+            );
+
+            successCode(res, newData, 200, "Thành công !")
+        }
+        catch (exception) {
+            console.log("🚀 ~ file: user.service.ts:102 ~ UserService ~ getInfoUserByUserId ~ exception:", exception);
+            errorCode(res, "Lỗi BE")
+        }
+    }
+
+
+    // ============================================
     //        TÌM TÊN NGƯỜI DÙNG THEO TÊN
     // ============================================ 
     async searchUserByName(userName: string, res: Response) {

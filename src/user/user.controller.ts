@@ -81,6 +81,16 @@ export class UserController {
         return this.userService.getInfoUserByUserId(id, res)
     }
 
+    // ============================================
+    // LẤY THÔNG TIN CHI TIẾT NGƯỜI DÙNG BY USER_ID
+    // ============================================
+    @HttpCode(200)
+    @Roles(Role.ADMIN, Role.USER)
+    @Get("order/history/:id")
+    getOrderHistoryUserId(@Param("id") id: number, @Res() res: Response) {
+        return this.userService.getOrderHistoryUserId(id, res)
+    }
+
 
     // ============================================
     //        TÌM NGƯỜI DÙNG THEO TÊN
