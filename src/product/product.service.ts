@@ -356,10 +356,13 @@ export class ProductService {
 
 
   // ============================================
-  //             PUT PRODUCT INFO
+  //             PATCH PRODUCT INFO
   // ============================================
   async putProduct(productID: number, body: UpdateProductDto, res: Response) {
     try {
+      body.loai_san_pham_id = +body.loai_san_pham_id;
+      body.so_luong_trong_kho = +body.so_luong_trong_kho;
+
       let data = await this.model.sanPham.findFirst({
         where: {
           san_pham_id: +productID,

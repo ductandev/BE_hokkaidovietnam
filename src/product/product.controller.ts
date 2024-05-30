@@ -122,12 +122,12 @@ export class ProductController {
 
 
   // ============================================
-  //             PUT PRODUCT INFO
+  //             PATCH PRODUCT INFO
   // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Put('info/:id')
+  @Patch('info/:id')
   putRoom(
     @Param('id') id: number,
     @Body() body: UpdateProductDto,

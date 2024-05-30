@@ -4,16 +4,17 @@ import { IsNotEmpty } from "class-validator";
 export class CreateProductDto {
     // [x: string]: any;
     @IsNotEmpty({ message: "Loại sản phẩm ID không được bỏ trống !" })
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     loai_san_pham_id?: number
 
     @IsNotEmpty({ message: "Tên sản phẩm không được bỏ trống !" })
     @ApiProperty()
     ten_san_pham?: string
-    @ApiProperty()
+
+    @ApiProperty({ type: 'number' })
     gia_ban?: number
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     gia_giam?: number
 
     @ApiProperty()
@@ -28,7 +29,7 @@ export class CreateProductDto {
     @ApiProperty({ type: 'boolean', required: false })
     trang_thai_san_pham?: boolean
 
-    @ApiProperty()
+    @ApiProperty({ type: 'number' })
     so_luong_trong_kho?: number
 
     @ApiProperty({ type: 'boolean', required: false })
