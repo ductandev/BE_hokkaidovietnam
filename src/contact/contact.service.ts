@@ -134,6 +134,29 @@ export class ContactService {
   }
 
   // ============================================
+  //            GET ALL NEWS CONTACT
+  // ============================================
+  async getContactSummary(res: Response) {
+    try {
+      const totalNews = await this.model.lienHe.findMany({
+        where: {
+          isDelete: false
+        }
+      });
+
+      const content = {
+        totalNews: totalNews.length
+      }
+
+      successCode(res, content, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: contact.service.ts:154 ~ ContactService ~ getContactSummary ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
   //           GET BY ID
   // ============================================ 
   async getById(id: number, res: Response) {
@@ -153,7 +176,7 @@ export class ContactService {
 
     }
     catch (exception) {
-      console.log("🚀 ~ file: contact.service.ts:140 ~ ContactService ~ getById ~ exception:", exception);
+      console.log("🚀 ~ file: contact.service.ts:179 ~ ContactService ~ getById ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -183,7 +206,7 @@ export class ContactService {
       successCode(res, body, 201, "Thêm thông tin liên hệ thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: contact.service.ts:171 ~ ContactService ~ postContact ~ exception:", exception);
+      console.log("🚀 ~ file: contact.service.ts:209 ~ ContactService ~ postContact ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -249,7 +272,7 @@ export class ContactService {
       successCode(res, data, 200, "Cập nhật trạng thái liên hệ thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: contact.service.ts:254 ~ ContactService ~ patchContact ~ exception:", exception);
+      console.log("🚀 ~ file: contact.service.ts:275 ~ ContactService ~ patchContact ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -281,7 +304,7 @@ export class ContactService {
       successCode(res, checkContact, 200, "Xóa liên hệ thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: contact.service.ts:284 ~ ContactService ~ deleteContact ~ exception:", exception);
+      console.log("🚀 ~ file: contact.service.ts:307 ~ ContactService ~ deleteContact ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }

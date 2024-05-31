@@ -52,8 +52,19 @@ export class ContactController {
     );
   }
 
+
   // ============================================
-  //                GET BY ID
+  //            GET ALL NEWS SUMARY
+  // ============================================
+  @HttpCode(200)
+  // @Roles(Role.ADMIN)
+  @Get("/summary")
+  getContactSummary(@Res() res: Response) {
+    return this.contactService.getContactSummary(res)
+  }
+
+  // ============================================
+  //            GET CONTACT BY ID
   // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
@@ -61,6 +72,7 @@ export class ContactController {
   getById(@Param('id') id: number, @Res() res: Response) {
     return this.contactService.getById(id, res);
   }
+
 
   // ============================================
   //               POST CONTACT
