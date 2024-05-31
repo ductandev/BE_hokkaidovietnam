@@ -3,8 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Response } from 'express';
 import { errorCode, failCode, successCode, successCodeProduct } from 'src/Config/response';
-import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
+import { CreateContactDto, UpdateContactDto } from './dto/create-contact.dto';
 
 @Injectable()
 export class ContactService {
@@ -192,35 +191,65 @@ export class ContactService {
   // ============================================
   //               PUT CONTACT 
   // ============================================
-  async putContact(id: number, body: UpdateContactDto, res: Response) {
-    try {
-      let { email } = body;
+  // async putContact(id: number, body: UpdateContactDto, res: Response) {
+  //   try {
 
-      let checkContactID = await this.model.lienHe.findFirst({
+  //     let checkContactID = await this.model.lienHe.findFirst({
+  //       where: {
+  //         lien_he_id: +id,
+  //         isDelete: false
+  //       }
+  //     });
+
+  //     if (checkContactID === null) {
+  //       return failCode(res, '', 400, "Dữ liệu liên hệ không tồn tại !")
+  //     }
+
+  //     await this.model.lienHe.update({
+  //       where: {
+  //         lien_he_id: +id,
+  //         isDelete: false
+  //       },
+  //       data: body
+  //     });
+
+  //     successCode(res, body, 200, "Cập nhật dữ liệu liên hệ thành công !")
+  //   }
+  //   catch (exception) {
+  //     console.log("🚀 ~ file: contact.service.ts:208 ~ ContactService ~ putContact ~ exception:", exception);
+  //     errorCode(res, "Lỗi BE")
+  //   }
+  // }
+
+
+  // ============================================
+  //               PATCH CONTACT
+  // ============================================
+  async patchContact(id: number, body: UpdateContactDto, res: Response) {
+    try {
+
+      let checkContact = await this.model.lienHe.findFirst({
         where: {
           lien_he_id: +id,
-          email,
           isDelete: false
         }
       });
 
-      if (checkContactID === null) {
-        return failCode(res, '', 400, "Dữ liệu liên hệ không tồn tại !")
+      if (checkContact === null) {
+        return failCode(res, '', 400, "Dữ liệu ID liên hệ không tồn tại !")
       }
 
-      await this.model.lienHe.update({
+      let data = await this.model.lienHe.update({
         where: {
-          lien_he_id: +id,
-          email,
-          isDelete: false
+          lien_he_id: +id
         },
         data: body
-      });
+      })
 
-      successCode(res, body, 200, "Cập nhật dữ liệu liên hệ thành công !")
+      successCode(res, data, 200, "Cập nhật trạng thái liên hệ thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: contact.service.ts:208 ~ ContactService ~ putContact ~ exception:", exception);
+      console.log("🚀 ~ file: contact.service.ts:254 ~ ContactService ~ patchContact ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -252,7 +281,7 @@ export class ContactService {
       successCode(res, checkContact, 200, "Xóa liên hệ thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: contact.service.ts:245 ~ ContactService ~ deleteContact ~ exception:", exception);
+      console.log("🚀 ~ file: contact.service.ts:284 ~ ContactService ~ deleteContact ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }

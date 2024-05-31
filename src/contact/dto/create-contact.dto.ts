@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsString, IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, Matches } from 'class-validator';
 
 export class CreateContactDto {
     @IsNotEmpty({ message: "Họ tên không được bỏ trống" })
@@ -16,4 +16,10 @@ export class CreateContactDto {
     @ApiProperty()
     noi_dung: string
 
+}
+
+export class UpdateContactDto {
+    @ApiProperty({ type: 'number' })
+    @IsNotEmpty({ message: "Trạng thái liên hệ không được bỏ trống" })
+    trang_thai_lien_he_id: number
 }

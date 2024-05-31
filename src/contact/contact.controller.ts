@@ -10,8 +10,7 @@ import { Roles } from 'src/decorators/roles.decorator';
 
 import { AuthenticationGuard } from 'src/guards/authentication.guard';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
-import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
+import { CreateContactDto, UpdateContactDto } from './dto/create-contact.dto';
 
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
@@ -80,16 +79,31 @@ export class ContactController {
   // ============================================
   //               PUT CONTACT 
   // ============================================
-  @HttpCode(20)
+  // @HttpCode(200)
+  // @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  // @Roles(Role.ADMIN)
+  // @Patch('/:id')
+  // putContact(
+  //   @Param('id') id: number,
+  //   @Body() body: UpdateContactDto,
+  //   @Res() res: Response,
+  // ) {
+  //   return this.contactService.putContact(id, body, res);
+  // }
+
+  // ============================================
+  //               PATCH CONTACT
+  // ============================================
+  @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Put('/:id')
-  putContact(
+  @Patch("/:id")
+  patchContact(
     @Param('id') id: number,
     @Body() body: UpdateContactDto,
     @Res() res: Response,
   ) {
-    return this.contactService.putContact(id, body, res);
+    return this.contactService.patchContact(id, body, res);
   }
 
   // ============================================
