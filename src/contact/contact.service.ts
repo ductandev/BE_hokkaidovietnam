@@ -134,18 +134,18 @@ export class ContactService {
   }
 
   // ============================================
-  //            GET ALL NEWS CONTACT
+  //            GET ALL CONTACT SUMMARY
   // ============================================
   async getContactSummary(res: Response) {
     try {
-      const totalNews = await this.model.lienHe.findMany({
+      const totalContact = await this.model.lienHe.findMany({
         where: {
           isDelete: false
         }
       });
 
       const content = {
-        totalNews: totalNews.length
+        totalContact: totalContact.length
       }
 
       successCode(res, content, 200, "Thành công !")
