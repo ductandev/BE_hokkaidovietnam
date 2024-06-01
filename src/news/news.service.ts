@@ -165,7 +165,82 @@ export class NewsService {
   // ============================================
   //           POST UPLOAD NEWS
   // ============================================
-  async postNews(file: Express.Multer.File, body: CreateNewsDto, res: Response) {
+  async postNews(body: CreateNewsDto, res: Response) {
+    try {
+      let { tieu_de, bai_viet_lien_quan } = body
+
+      if (bai_viet_lien_quan && typeof bai_viet_lien_quan === 'string') {
+        body.bai_viet_lien_quan = JSON.parse(bai_viet_lien_quan);
+      }
+
+      if (body.bai_viet_lien_quan === undefined) {
+        body.bai_viet_lien_quan = []
+      }
+
+      let data = await this.model.tinTuc.findFirst({
+        where: {
+          tieu_de,
+          isDelete: false
+        }
+      })
+
+      if (data !== null) {
+        return failCode(res, '', 400, "Tiêu đề bài viết đã tồn tại !");
+      }
+
+      const newData = await this.model.tinTuc.create({
+        data: body
+      });
+
+      successCode(res, newData, 201, 'Thêm tin tức thành công !');
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:200 ~ NewsService ~ postNews ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
+  //           PATCH UPLOAD NEWS
+  // ============================================
+  async patchNews(id: number, body: CreateNewsDto, res: Response) {
+    try {
+
+      if (body.bai_viet_lien_quan && typeof body.bai_viet_lien_quan === 'string') {
+        body.bai_viet_lien_quan = JSON.parse(body.bai_viet_lien_quan);
+      }
+
+      let data = await this.model.tinTuc.findFirst({
+        where: {
+          tin_tuc_id: +id,
+          isDelete: false
+        }
+      })
+
+      if (data === null) {
+        return failCode(res, '', 400, "Tin tức ID không tồn tại !");
+      }
+
+      const newData = await this.model.tinTuc.update({
+        where: {
+          tin_tuc_id: +id,
+          isDelete: false
+        },
+        data: body
+      });
+
+      successCode(res, newData, 200, 'Sửa tin tức thành công !');
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: news.service.ts:237 ~ NewsService ~ patchNews ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
+  // ============================================
+  //           POST UPLOAD NEWS FORM DATA
+  // ============================================
+  async postNewsFormData(file: Express.Multer.File, body: CreateNewsDto, res: Response) {
     try {
       let { tieu_de, mo_ta, noi_dung, bai_viet_lien_quan } = body
 
@@ -214,15 +289,15 @@ export class NewsService {
       successCode(res, newData, 201, 'Thêm tin tức thành công !');
     }
     catch (exception) {
-      console.log("🚀 ~ file: news.service.ts:194 ~ NewsService ~ postNews ~ exception:", exception);
+      console.log("🚀 ~ file: news.service.ts:294 ~ NewsService ~ postNewsFormData ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
 
   // ============================================
-  //           PUT UPLOAD NEWS
+  //           PUT UPLOAD NEWS FORM DATA
   // ============================================
-  async putNews(file: Express.Multer.File, id: number, body: CreateNewsDto, res: Response) {
+  async putNewsFormData(file: Express.Multer.File, id: number, body: CreateNewsDto, res: Response) {
     try {
       let { tieu_de, mo_ta, noi_dung, bai_viet_lien_quan = [] } = body
 
@@ -275,7 +350,7 @@ export class NewsService {
       successCode(res, newData, 200, 'Cập nhật tin tức thành công !');
     }
     catch (exception) {
-      console.log("🚀 ~ file: news.service.ts:237 ~ NewsService ~ putNews ~ exception:", exception);
+      console.log("🚀 ~ file: news.service.ts:355 ~ NewsService ~ putNewsFormData ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }
@@ -308,7 +383,7 @@ export class NewsService {
       successCode(res, checkNewsID, 200, "Thành công !")
     }
     catch (exception) {
-      console.log("🚀 ~ file: news.service.ts:270 ~ NewsService ~ deleteNews ~ exception:", exception);
+      console.log("🚀 ~ file: news.service.ts:388 ~ NewsService ~ deleteNews ~ exception:", exception);
       errorCode(res, "Lỗi BE")
     }
   }

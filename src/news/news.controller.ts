@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFile, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFile, Query, Patch } from '@nestjs/common';
 import { NewsService } from './news.service';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -85,41 +85,74 @@ export class NewsController {
     return this.newsService.getNameNews(name, res);
   }
 
+
+
   // ============================================
   //           POST UPLOAD NEWS
+  // ============================================
+  @HttpCode(201)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
+  @Post("/")
+
+  postNews(
+    @Body() body: CreateNewsDto,
+    @Res() res: Response) {
+
+    return this.newsService.postNews(body, res)
+  }
+
+  // ============================================
+  //           PATCH UPLOAD NEWS
+  // ============================================
+  @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
+  @Patch("/:id")
+
+  patchNews(
+    @Param("id") id: number,
+    @Body() body: CreateNewsDto,
+    @Res() res: Response) {
+
+    return this.newsService.patchNews(id, body, res)
+  }
+
+  // ============================================
+  //           POST UPLOAD NEWS FORM DATA
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(201)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Post("/")
+  @Post("/create")
   @UseInterceptors(FileInterceptor("hinh_anh"))
 
-  postNews(
+  postNewsFormData(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreateNewsDto,
     @Res() res: Response) {
 
-    return this.newsService.postNews(file, body, res)
+    return this.newsService.postNewsFormData(file, body, res)
   }
 
   // ============================================
-  //           PUT UPLOAD NEWS
+  //           PUT UPLOAD NEWS FORM DATA
   // ============================================
   @ApiConsumes('multipart/form-data')
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Put("/:id")
+  @Put("create/:id")
   @UseInterceptors(FileInterceptor("hinh_anh"))
 
-  putNews(
+  putNewsFormData(
     @UploadedFile() file: Express.Multer.File,
     @Param("id") id: number,
     @Body() body: CreateNewsDto,
     @Res() res: Response) {
 
-    return this.newsService.putNews(file, id, body, res)
+    return this.newsService.putNewsFormData(file, id, body, res)
   }
 
   // ============================================

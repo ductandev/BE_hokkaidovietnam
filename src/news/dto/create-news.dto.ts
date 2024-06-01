@@ -10,10 +10,9 @@ export class CreateNewsDto {
     @ApiProperty()
     noi_dung?: string
 
-    @ApiProperty({ type: 'array', required: false })
-    bai_viet_lien_quan?: []
-
-
     @ApiProperty({ type: 'string', format: 'binary' })
-    hinh_anh?: any
+    hinh_anh?: string
+
+    @ApiProperty()
+    bai_viet_lien_quan?: any[]
 }
