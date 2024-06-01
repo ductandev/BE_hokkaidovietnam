@@ -2,8 +2,8 @@ import { ApiProperty } from "@nestjs/swagger"
 import { IsString, IsEmail, IsNotEmpty, Length, Matches } from 'class-validator';
 
 export class UserSignUpType {
-    nguoi_dung_id: number;
-    vai_tro_id: number;
+    nguoi_dung_id?: number;
+    vai_tro_id?: number;
 
     @IsNotEmpty({ message: 'Họ tên không được bỏ trống !' })
     @IsString()
@@ -49,7 +49,7 @@ export class UserSignUpType {
     so_dien_thoai: string;
 
     // @ApiProperty()
-    anh_dai_dien: string;
+    anh_dai_dien?: string;
 
     @IsNotEmpty()
     @IsString()
@@ -57,5 +57,5 @@ export class UserSignUpType {
     gioi_tinh: string;
 
     // @ApiProperty()
-    isDelete: boolean;
+    isDelete?: boolean;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, Res, UseGuards, Put, UseInterceptors, UploadedFile, SetMetadata, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode, Res, UseGuards, Put, UseInterceptors, UploadedFile, SetMetadata, Query, Patch } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -126,8 +126,8 @@ export class UserController {
         @UploadedFile() file: Express.Multer.File,
         @Param("id") id: number,
         @Body() body: FileUploadDto_user,
-        @Res() res: Response) {
-
+        @Res() res: Response
+    ) {
         return this.userService.uploadImg(file, id, body, res)
     }
 
@@ -136,8 +136,12 @@ export class UserController {
     // ============================================
     @HttpCode(200)
     @Roles(Role.ADMIN, Role.USER)
-    @Put("/:id")
-    updateUserById(@Param("id") id: string, @Body() body: UserUpdateDto, @Res() res: Response) {
+    @Patch("/:id")
+    updateUserById(
+        @Param("id") id: string,
+        @Body() body: UserUpdateDto,
+        @Res() res: Response
+    ) {
         return this.userService.updateUserById(id, body, res)
     }
 
@@ -147,7 +151,10 @@ export class UserController {
     @HttpCode(200)
     @Roles(Role.ADMIN)
     @Delete("/:id")
-    deleteUserById(@Param("id") id: string, @Res() res: Response) {
+    deleteUserById(
+        @Param("id") id: string,
+        @Res() res: Response
+    ) {
         return this.userService.deleteUserById(id, res)
     }
 

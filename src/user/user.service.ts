@@ -406,52 +406,50 @@ export class UserService {
     // ============================================  
     async updateUserById(id: string, body: UserUpdateDto, res: Response) {
         try {
-            let { ho_ten, email, mat_khau, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, gioi_tinh } = body;
-
-            let checkEmail = await this.model.nguoiDung.findFirst({
-                where: {
-                    nguoi_dung_id: +id,
-                    email,
-                    vai_tro_id: 2,
-                    isDelete: false
-                }
-            });
-
-            if (checkEmail === null) {
-                return failCode(res, checkEmail, 400, "Email hoặc người dùng ID không đúng !")
+            const { so_dien_thoai, ...newBody } = body;
+            if (newBody.mat_khau) {
+                newBody.mat_khau = await bcrypt.hash(newBody.mat_khau, 10)    //  thay đổi bcrypt.hashSync thành await bcrypt.hash để sử dụng hàm hash bất đồng bộ. Điều này cần thiết để tránh blocking thread chính khi mã hóa mật khẩu.
             }
-
 
             const checkPhone = await this.model.nguoiDung.findFirst({
                 where: {
-                    so_dien_thoai,
-                    NOT: {
-                        nguoi_dung_id: +id // Bỏ qua người dùng hiện tại đang được cập nhật
-                    }
+                    nguoi_dung_id: +id,
+                    so_dien_thoai,          // BẮT NGƯỜI DÙNG THEO SĐT NÊN SĐT LÀ DUY NHẤT VÀ KO ĐƯỢC PHÉP HAY ĐỔI
+                    isDelete: false
                 }
             });
 
-            if (checkPhone) {
-                return failCode(res, null, 400, "Số điện thoại này đã được sử dụng cho người dùng khác !");
+            if (checkPhone === null) {
+                return failCode(res, null, 400, "Số điện thoại hoặc ID người dùng không đúng !");
             }
 
+            if (newBody.email) {
+                // Kiểm tra xem email có trùng với email nào khác (ngoại trừ người dùng hiện tại và các vai_tro_id bằng 3)
+                let checkEmail = await this.model.nguoiDung.findFirst({
+                    where: {
+                        email: newBody.email,
+                        isDelete: false,
+                        vai_tro_id: {
+                            not: 3
+                        },
+                        NOT: {
+                            nguoi_dung_id: +id // Bỏ qua người dùng hiện tại
+                        }
+                    }
+                });
 
+                if (checkEmail) {
+                    return failCode(res, checkEmail, 400, "Email này đã được đăng ký trước đó ! Vui lòng chọn email khác")
+                }
+            }
+
+            // CẬP NHẬT NGƯỜI DÙNG
             let newData = await this.model.nguoiDung.update({
                 where: {
                     nguoi_dung_id: +id,
-                    email,
                     isDelete: false
                 },
-                data: {
-                    ho_ten,
-                    mat_khau: await bcrypt.hash(mat_khau, 10), //  thay đổi bcrypt.hashSync thành await bcrypt.hash để sử dụng hàm hash bất đồng bộ. Điều này cần thiết để tránh blocking thread chính khi mã hóa mật khẩu.
-                    dia_chi,
-                    phuong_id,
-                    quan_id,
-                    tinh_thanh_id,
-                    so_dien_thoai,
-                    gioi_tinh
-                }
+                data: newBody
             });
 
             successCode(res, newData, 200, "Cập nhật thông tin thành công !")
