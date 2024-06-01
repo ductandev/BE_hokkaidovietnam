@@ -179,7 +179,7 @@ model LienHe {
 
 model TinTuc {
   tin_tuc_id         Int      @id @default(autoincrement())
-  hinh_anh           String?  @db.VarChar(255)
+  hinh_anh           Json?
   tieu_de            String?  @db.Text
   mo_ta              String?  @db.Text
   noi_dung           String?  @db.Text
