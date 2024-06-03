@@ -609,9 +609,9 @@ export class OrderService {
   // ============================================
   async getOrderSuccessExcel(startDate: string, endDate: string, res: Response) {
     try {
-
+      let orders;
       if (startDate === '' && endDate === '') {
-        const totalOderAll = await this.model.donHang.findMany({
+        orders = await this.model.donHang.findMany({
           where: {
             trang_thai_don_hang_id: 4,
             isDelete: false,
@@ -627,38 +627,51 @@ export class OrderService {
             NguoiDung: true
           }
         });
-
-        return successCode(res, totalOderAll, 200, "Thành công !")
-      }
-
-      const totalOderOnMonth = await this.model.donHang.findMany({
-        where: {
-          trang_thai_don_hang_id: 4,
-          isDelete: false,
-          thoi_gian_dat_hang: {
-            gte: startDate,
-            lte: endDate
-          }
-        },
-        include: {
-          ChiTietDonHang: {
-            include: {
-              SanPham: true
+      } else {
+        orders = await this.model.donHang.findMany({
+          where: {
+            trang_thai_don_hang_id: 4,
+            isDelete: false,
+            thoi_gian_dat_hang: {
+              gte: startDate,
+              lte: endDate
             }
           },
-          HinhThucThanhToan: true,
-          TrangThaiDonHang: true,
-          NguoiDung: true
-        }
-      });
+          include: {
+            ChiTietDonHang: {
+              include: {
+                SanPham: true
+              }
+            },
+            HinhThucThanhToan: true,
+            TrangThaiDonHang: true,
+            NguoiDung: true
+          }
+        });
+      }
 
-      successCode(res, totalOderOnMonth, 200, "Thành công !")
-    }
-    catch (exception) {
+      // Tạo object mới với các thông tin cần thiết
+      const orderSummary = orders.map(order => ({
+        ma_don_hang: order.don_hang_id,
+        ho_ten: order.ho_ten,
+        gmail: order.email,
+        so_dien_thoai: order.so_dien_thoai,
+        dia_chi: order.dia_chi,
+        phuong_id: order.phuong_id,
+        quan_id: order.quan_id,
+        tinh_thanh_id: order.tinh_thanh_id,
+        thoi_gian_dat_hang: order.thoi_gian_dat_hang,
+        hinh_thuc_thanh_toan: order.HinhThucThanhToan.ten_hinh_thuc_thanh_toan,
+        tong_tien: order.tong_tien
+      }));
+
+      return successCode(res, orderSummary, 200, "Thành công !");
+    } catch (exception) {
       console.log("🚀 ~ file: order.service.ts:646 ~ OrderService ~ getOrderSuccessExcel ~ exception:", exception);
-      errorCode(res, "Lỗi BE")
+      errorCode(res, "Lỗi BE");
     }
   }
+
 
 
   // ============================================
