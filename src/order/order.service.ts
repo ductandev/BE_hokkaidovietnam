@@ -563,8 +563,8 @@ export class OrderService {
 
       const firstDayOfMonth = moment().startOf('month').format();
       const lastDayOfMonth = moment().endOf('month').format();
-      // console.log("🚀 firstDayOfMonth ", firstDayOfMonth);
-      // console.log("🚀 lastDayOfMonth ", lastDayOfMonth)
+      console.log("🚀 firstDayOfMonth ", firstDayOfMonth);
+      console.log("🚀 lastDayOfMonth ", lastDayOfMonth)
 
       const totalOrderStatusDone = await this.model.donHang.findMany({
         where: {
@@ -609,7 +609,7 @@ export class OrderService {
   // ============================================
   async getOrderSuccessExcel(startDate: string, endDate: string, res: Response) {
     try {
-      let orders;
+      let orders: any[];
       if (startDate === '' && endDate === '') {
         orders = await this.model.donHang.findMany({
           where: {
@@ -625,6 +625,9 @@ export class OrderService {
             HinhThucThanhToan: true,
             TrangThaiDonHang: true,
             NguoiDung: true
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
       } else {
@@ -646,6 +649,9 @@ export class OrderService {
             HinhThucThanhToan: true,
             TrangThaiDonHang: true,
             NguoiDung: true
+          },
+          orderBy: {
+            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
           }
         });
       }
