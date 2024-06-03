@@ -604,6 +604,62 @@ export class OrderService {
     }
   }
 
+  // ============================================
+  //            GET ALL ORDER SUMARY
+  // ============================================
+  async getOrderSuccessExcel(startDate: string, endDate: string, res: Response) {
+    try {
+
+      if (startDate === '' && endDate === '') {
+        const totalOderAll = await this.model.donHang.findMany({
+          where: {
+            trang_thai_don_hang_id: 4,
+            isDelete: false,
+          },
+          include: {
+            ChiTietDonHang: {
+              include: {
+                SanPham: true
+              }
+            },
+            HinhThucThanhToan: true,
+            TrangThaiDonHang: true,
+            NguoiDung: true
+          }
+        });
+
+        return successCode(res, totalOderAll, 200, "Thành công !")
+      }
+
+      const totalOderOnMonth = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: 4,
+          isDelete: false,
+          thoi_gian_dat_hang: {
+            gte: startDate,
+            lte: endDate
+          }
+        },
+        include: {
+          ChiTietDonHang: {
+            include: {
+              SanPham: true
+            }
+          },
+          HinhThucThanhToan: true,
+          TrangThaiDonHang: true,
+          NguoiDung: true
+        }
+      });
+
+      successCode(res, totalOderOnMonth, 200, "Thành công !")
+    }
+    catch (exception) {
+      console.log("🚀 ~ file: order.service.ts:646 ~ OrderService ~ getOrderSuccessExcel ~ exception:", exception);
+      errorCode(res, "Lỗi BE")
+    }
+  }
+
 
   // ============================================
   //             GET ORDER BY ID

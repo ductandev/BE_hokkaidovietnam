@@ -192,6 +192,21 @@ export class OrderController {
   }
 
   // ============================================
+  //         GET ALL ORDER EXPORT EXCEL
+  // ============================================
+  @HttpCode(200)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @Roles(Role.ADMIN)
+  @Get("export")
+  getOrderSuccessExcel(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @Res() res: Response
+  ) {
+    return this.orderService.getOrderSuccessExcel(startDate, endDate, res)
+  }
+
+  // ============================================
   //             GET ORDER BY ID
   // ============================================ 
   @HttpCode(200)
