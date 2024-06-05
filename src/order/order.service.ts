@@ -749,7 +749,7 @@ export class OrderService {
   // ============================================
   async postOrder(body: CreateOrderDto, res: Response) {
     try {
-      const { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham, hinh_thuc_thanh_toan_id } = body
+      const { ho_ten, email, dia_chi, phuong_id, quan_id, tinh_thanh_id, so_dien_thoai, san_pham, hinh_thuc_thanh_toan_id, ma_giam_gia, tong_tien } = body
       const { nguoi_dung_id, ...bodyNoUserID } = body
 
       bodyNoUserID.thoi_gian_dat_hang = new Date();
@@ -781,23 +781,54 @@ export class OrderService {
         });
       }
 
+
+      let tongTienTinhDuoc = 0;
+
       // Kiểm tra số lượng sản phẩm trong kho trước khi tạo đơn hàng
       for (const sp of san_pham) {
         const product = await this.model.sanPham.findFirst({
           where: {
             san_pham_id: sp.san_pham_id,
+            gia_ban: sp.don_gia,
             isDelete: false
           }
         });
 
         if (!product) {
-          return failCode(res, product, 400, `Sản phẩm ID ${sp.san_pham_id} không tồn tại.`);
+          return failCode(res, product, 400, `Sản phẩm ID ${sp.san_pham_id} hoặc đơn giá không tồn tại.`);
         }
 
         if (product.so_luong_trong_kho < sp.so_luong) {
           return failCode(res, product, 400, `Số lượng sản phẩm ${product.ten_san_pham} không đủ.`);
         }
+
+        tongTienTinhDuoc += sp.so_luong * sp.don_gia;
       }
+
+      // Kiểm tra xem Mã giảm giá có tồn tại hay không, nếu không nhập mã giảm thì sẽ không giảm giá.
+      let tiLeGiamGia = 0;
+      if (ma_giam_gia) {
+        let checkVoucher = await this.model.maGiam.findFirst({
+          where: {
+            ma_giam_gia,
+            isDelete: false
+          }
+        });
+
+        if (checkVoucher) {
+          tiLeGiamGia = checkVoucher.cu_the;
+        }
+      }
+
+      // Áp dụng giảm giá
+      tongTienTinhDuoc = tongTienTinhDuoc - (tongTienTinhDuoc * tiLeGiamGia) / 100;
+
+      // Kiểm tra tổng tiền FE gửi lên và tổng tiền BE tính được có khớp không
+      if (tong_tien !== tongTienTinhDuoc) {
+        return failCode(res, '', 400, "Tổng tiền không hợp lệ !");
+      }
+
+
 
       // Tạo đơn hàng
       let data = await this.model.donHang.create({
