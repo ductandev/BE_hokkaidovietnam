@@ -374,10 +374,13 @@ export class ProductService {
         return failCode(res, data, 400, "Sản phẩm ID này không tồn tại !")
       }
 
+      // Kiểm tra và cập nhật "trạng thái sản phẩm" dựa trên số lượng trong kho
+      body.trang_thai_san_pham = body.so_luong_trong_kho > 0;   // Trả về True hoặc False
+
       let newData = await this.model.sanPham.update({
         where: {
           san_pham_id: +productID,
-          isDelete: false
+          isDelete: false,
         },
         data: body
       })
