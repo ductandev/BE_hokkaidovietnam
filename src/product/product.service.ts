@@ -62,7 +62,6 @@ export class ProductService {
             ten_san_pham: {
               contains: search   // LIKE '%nameProduct%'
             },
-            trang_thai_san_pham: true,
             isDelete: false
           }
         });
@@ -78,7 +77,6 @@ export class ProductService {
             ten_san_pham: {
               contains: search   // LIKE '%nameProduct%'
             },
-            trang_thai_san_pham: true,
             isDelete: false
           },
           orderBy: {
@@ -99,7 +97,6 @@ export class ProductService {
           ten_san_pham: {
             contains: search   // LIKE '%nameProduct%'
           },
-          trang_thai_san_pham: true,
           isDelete: false
         }
       });
@@ -116,7 +113,6 @@ export class ProductService {
             contains: search   // LIKE '%nameProduct%'
           },
           loai_san_pham_id: +typeID,
-          trang_thai_san_pham: true,
           isDelete: false
         },
         orderBy: {
