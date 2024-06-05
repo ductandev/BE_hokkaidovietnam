@@ -781,6 +781,25 @@ export class OrderService {
         });
       }
 
+      // Kiểm tra số lượng sản phẩm trong kho trước khi tạo đơn hàng
+      for (const sp of san_pham) {
+        const product = await this.model.sanPham.findFirst({
+          where: {
+            san_pham_id: sp.san_pham_id,
+            isDelete: false
+          }
+        });
+
+        if (!product) {
+          return failCode(res, product, 400, `Sản phẩm ID ${sp.san_pham_id} không tồn tại.`);
+        }
+
+        if (product.so_luong_trong_kho < sp.so_luong) {
+          return failCode(res, product, 400, `Số lượng sản phẩm ${product.ten_san_pham} không đủ.`);
+        }
+      }
+
+      // Tạo đơn hàng
       let data = await this.model.donHang.create({
         data: bodyNoUserID
       })
@@ -795,6 +814,27 @@ export class OrderService {
             don_gia: sp.don_gia
           }
         })
+
+        const updateOldQuantity = await this.model.sanPham.findFirst({
+          where: {
+            san_pham_id: sp.san_pham_id,
+            isDelete: false
+          }
+        });
+
+        const newQuantity = updateOldQuantity.so_luong_trong_kho - sp.so_luong;
+
+        // Cập nhật số lượng sản phẩm trong kho
+        await this.model.sanPham.update({
+          where: {
+            san_pham_id: sp.san_pham_id,
+            isDelete: false
+          },
+          data: {
+            so_luong_trong_kho: newQuantity,
+            trang_thai_san_pham: newQuantity === 0 ? false : updateOldQuantity.trang_thai_san_pham
+          }
+        });
 
         // Xóa giỏ hàng sau khi đặt hàng
         if (checkUserPhone.vai_tro_id !== 3 && nguoi_dung_id) {
