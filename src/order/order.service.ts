@@ -821,13 +821,12 @@ export class OrderService {
       }
 
       // Áp dụng giảm giá
-      tongTienTinhDuoc = tongTienTinhDuoc - (tongTienTinhDuoc * tiLeGiamGia) / 100;
+      tongTienTinhDuoc = tongTienTinhDuoc - (tongTienTinhDuoc * tiLeGiamGia) / 100 + 30;  // Cộng 30k phí ship mặc định
 
       // Kiểm tra tổng tiền FE gửi lên và tổng tiền BE tính được có khớp không
       if (tong_tien !== tongTienTinhDuoc) {
         return failCode(res, '', 400, "Tổng tiền không hợp lệ !");
       }
-
 
 
       // Tạo đơn hàng
