@@ -605,7 +605,7 @@ export class OrderService {
   }
 
   // ============================================
-  //            GET ALL ORDER SUMARY
+  //         GET ALL ORDER EXPORT EXCEL
   // ============================================
   async getOrderSuccessExcel(startDate: string, endDate: string, res: Response) {
     try {
@@ -658,6 +658,7 @@ export class OrderService {
 
       // Tạo object mới với các thông tin cần thiết
       const orderSummary = orders.map(order => ({
+        // ma_don_hang: undefined,     // để undefined để ko trả về dữ liệu này, kết hợp với select
         ma_don_hang: order.don_hang_id,
         ho_ten: order.ho_ten,
         gmail: order.email,
