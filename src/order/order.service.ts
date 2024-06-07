@@ -609,52 +609,29 @@ export class OrderService {
   // ============================================
   async getOrderSuccessExcel(startDate: string, endDate: string, res: Response) {
     try {
-      let orders: any[];
-      if (startDate === '' && endDate === '') {
-        orders = await this.model.donHang.findMany({
-          where: {
-            trang_thai_don_hang_id: 4,
-            isDelete: false,
-          },
-          include: {
-            ChiTietDonHang: {
-              include: {
-                SanPham: true
-              }
-            },
-            HinhThucThanhToan: true,
-            TrangThaiDonHang: true,
-            NguoiDung: true
-          },
-          orderBy: {
-            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
+      let orders = await this.model.donHang.findMany({
+        where: {
+          trang_thai_don_hang_id: 4,
+          isDelete: false,
+          thoi_gian_dat_hang: {
+            gte: startDate,
+            lte: endDate
           }
-        });
-      } else {
-        orders = await this.model.donHang.findMany({
-          where: {
-            trang_thai_don_hang_id: 4,
-            isDelete: false,
-            thoi_gian_dat_hang: {
-              gte: startDate,
-              lte: endDate
+        },
+        include: {
+          ChiTietDonHang: {
+            include: {
+              SanPham: true
             }
           },
-          include: {
-            ChiTietDonHang: {
-              include: {
-                SanPham: true
-              }
-            },
-            HinhThucThanhToan: true,
-            TrangThaiDonHang: true,
-            NguoiDung: true
-          },
-          orderBy: {
-            don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
-          }
-        });
-      }
+          HinhThucThanhToan: true,
+          TrangThaiDonHang: true,
+          NguoiDung: true
+        },
+        orderBy: {
+          don_hang_id: 'desc'   // Đảm bảo lấy dữ liệu mới nhất trước
+        }
+      });
 
       // Tạo object mới với các thông tin cần thiết
       const orderSummary = orders.map(order => ({
@@ -678,7 +655,6 @@ export class OrderService {
       errorCode(res, "Lỗi BE");
     }
   }
-
 
 
   // ============================================
