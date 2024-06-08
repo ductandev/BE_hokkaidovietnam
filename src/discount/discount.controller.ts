@@ -68,7 +68,7 @@ export class DiscountController {
   // ============================================ 
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("check/name")
+  @Get("check/")
   getByName(
     @Query('name') ma_giam_gia: string,
     @Res() res: Response
