@@ -798,8 +798,7 @@ export class OrderService {
       }
 
       // Áp dụng giảm giá
-      tongTienTinhDuoc = tongTienTinhDuoc - (tongTienTinhDuoc * tiLeGiamGia) / 100 + 30000;  // Cộng 30k phí ship mặc định
-      console.log("🚀 ~ file: order.service.ts:802 ~ OrderService ~ postOrder ~ tongTienTinhDuoc:", tongTienTinhDuoc);
+      tongTienTinhDuoc = tongTienTinhDuoc - (tongTienTinhDuoc * tiLeGiamGia) / 100 + 30000;  // Cộng 30.000 ngàn phí ship mặc định
 
       // Kiểm tra tổng tiền FE gửi lên và tổng tiền BE tính được có khớp không
       if (tong_tien !== tongTienTinhDuoc) {

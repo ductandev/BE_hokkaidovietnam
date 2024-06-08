@@ -114,9 +114,8 @@ export class DiscountService {
     // ============================================
     //             GET DISCOUNT BY NAME
     // ============================================ 
-    async getByName(body: NameDiscountDto, res: Response) {
+    async getByName(ma_giam_gia: string, res: Response) {
         try {
-            let { ma_giam_gia } = body
             const currentDate = new Date();
 
             let data = await this.model.maGiam.findFirst({
