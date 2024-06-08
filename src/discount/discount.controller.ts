@@ -70,7 +70,7 @@ export class DiscountController {
   // @Roles(Role.ADMIN, Role.USER)
   @Get("check/name")
   getByName(
-    @Query('ma_giam_gia') ma_giam_gia: string,
+    @Query('name') ma_giam_gia: string,
     @Res() res: Response
   ) {
     return this.discountService.getByName(ma_giam_gia, res)
