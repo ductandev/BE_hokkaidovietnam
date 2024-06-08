@@ -53,6 +53,19 @@ export class DiscountController {
   }
 
   // ============================================
+  //             GET DISCOUNT BY NAME
+  // ============================================ 
+  @HttpCode(200)
+  // @Roles(Role.ADMIN, Role.USER)
+  @Get("check")
+  getByName(
+    @Query('name') ma_giam_gia: string,
+    @Res() res: Response
+  ) {
+    return this.discountService.getByName(ma_giam_gia, res)
+  }
+
+  // ============================================
   //             GET DISCOUNT BY ID
   // ============================================ 
   @HttpCode(200)
@@ -61,19 +74,6 @@ export class DiscountController {
   @Get("/:id")
   getById(@Param("id") id: number, @Res() res: Response) {
     return this.discountService.getById(id, res)
-  }
-
-  // ============================================
-  //             GET DISCOUNT BY NAME
-  // ============================================ 
-  @HttpCode(200)
-  // @Roles(Role.ADMIN, Role.USER)
-  @Get("check/")
-  getByName(
-    @Query('name') ma_giam_gia: string,
-    @Res() res: Response
-  ) {
-    return this.discountService.getByName(ma_giam_gia, res)
   }
 
   // ============================================
