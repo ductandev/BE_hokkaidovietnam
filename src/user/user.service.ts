@@ -93,6 +93,10 @@ export class UserService {
                     },
                     include: {
                         DonHang: {
+                            where: {
+                                trang_thai_don_hang_id: 4,
+                                isDelete: false
+                            },
                             include: {
                                 ChiTietDonHang: true
                             }
@@ -136,6 +140,10 @@ export class UserService {
                 },
                 include: {
                     DonHang: {
+                        where: {
+                            trang_thai_don_hang_id: 4,
+                            isDelete: false
+                        },
                         include: {
                             ChiTietDonHang: true
                         }
