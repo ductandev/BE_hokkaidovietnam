@@ -227,6 +227,9 @@ export class UserService {
                 },
                 include: {
                     DonHang: {
+                        where: {
+                            isDelete: false
+                        },
                         include: {
                             ChiTietDonHang: {
                                 include: {
