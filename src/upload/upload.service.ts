@@ -39,7 +39,7 @@ export class UploadService {
       });
 
       const dataCloudinaryArray = await Promise.all(uploadPromises);
-      // console.log(dataCloudinaryArray)
+      console.log(dataCloudinaryArray)
       // ************************ END *****************************
 
       const content = {

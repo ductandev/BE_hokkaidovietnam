@@ -61,4 +61,10 @@ script_rebuild.sh
 script.sh
 
 Hokkaido_Vietnam.postman_collection.json
-hokkaidovietnam.sql
+*.sql
+claude.md
+
+package-lock.json
+*.tsbuildinfo
+public/uploads/
+.yarn/cache
