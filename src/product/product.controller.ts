@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFiles, Patch, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  HttpCode,
+  Res,
+  Put,
+  UseInterceptors,
+  UploadedFiles,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -21,7 +36,7 @@ import { FileUploadDto_product } from './dto/upload.dto';
 @ApiTags('SanPham')
 @Controller('api/product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
   // ============================================
   //            GET ALL PRODUCTS
@@ -60,11 +75,10 @@ export class ProductController {
   // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN)
-  @Get("summary")
+  @Get('summary')
   getUserSummary(@Res() res: Response) {
-    return this.productService.getUserSummary(res)
+    return this.productService.getUserSummary(res);
   }
-
 
   // ============================================
   //          GET PRODUCT BY ID
@@ -82,10 +96,7 @@ export class ProductController {
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
   @Get('name/:name')
-  getNameProduct(
-    @Param('name') name: string,
-    @Res() res: Response,
-  ) {
+  getNameProduct(@Param('name') name: string, @Res() res: Response) {
     return this.productService.getNameProduct(name, res);
   }
 
@@ -96,10 +107,7 @@ export class ProductController {
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
   @Post('/')
-  postProduct(
-    @Body() body: CreateProductDto,
-    @Res() res: Response,
-  ) {
+  postProduct(@Body() body: CreateProductDto, @Res() res: Response) {
     return this.productService.postProduct(body, res);
   }
 
@@ -119,7 +127,6 @@ export class ProductController {
   ) {
     return this.productService.postCreateProduct(files, body, res);
   }
-
 
   // ============================================
   //             PATCH PRODUCT INFO

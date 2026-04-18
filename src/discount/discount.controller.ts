@@ -1,5 +1,20 @@
 import { DiscountService } from './discount.service';
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFiles, Patch, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  HttpCode,
+  Res,
+  Put,
+  UseInterceptors,
+  UploadedFiles,
+  Patch,
+  Query,
+} from '@nestjs/common';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -18,7 +33,7 @@ import { CreateDiscountDto, NameDiscountDto } from './dto/create-discount.dto';
 @ApiTags('GiamGia')
 @Controller('api/discount')
 export class DiscountController {
-  constructor(private readonly discountService: DiscountService) { }
+  constructor(private readonly discountService: DiscountService) {}
 
   // ============================================
   //            GET ALL DISCOUNT
@@ -48,32 +63,29 @@ export class DiscountController {
       pageIndex,
       pageSize,
       search,
-      res
+      res,
     );
   }
 
   // ============================================
   //             GET DISCOUNT BY NAME
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN, Role.USER)
-  @Get("check")
-  getByName(
-    @Query('name') ma_giam_gia: string,
-    @Res() res: Response
-  ) {
-    return this.discountService.getByName(ma_giam_gia, res)
+  @Get('check')
+  getByName(@Query('name') ma_giam_gia: string, @Res() res: Response) {
+    return this.discountService.getByName(ma_giam_gia, res);
   }
 
   // ============================================
   //             GET DISCOUNT BY ID
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Get("/:id")
-  getById(@Param("id") id: number, @Res() res: Response) {
-    return this.discountService.getById(id, res)
+  @Get('/:id')
+  getById(@Param('id') id: number, @Res() res: Response) {
+    return this.discountService.getById(id, res);
   }
 
   // ============================================
@@ -82,12 +94,9 @@ export class DiscountController {
   @HttpCode(201)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Post("/create")
-  postDiscount(
-    @Body() body: CreateDiscountDto,
-    @Res() res: Response
-  ) {
-    return this.discountService.postDiscount(body, res)
+  @Post('/create')
+  postDiscount(@Body() body: CreateDiscountDto, @Res() res: Response) {
+    return this.discountService.postDiscount(body, res);
   }
 
   // ============================================
@@ -96,26 +105,23 @@ export class DiscountController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Put("/:id")
+  @Put('/:id')
   putDiscountbyId(
-    @Param("id") id: number,
+    @Param('id') id: number,
     @Body() body: CreateDiscountDto,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
-    return this.discountService.putDiscountbyId(id, body, res)
+    return this.discountService.putDiscountbyId(id, body, res);
   }
 
   // ============================================
-  //            DELETE DISCOUNT  
+  //            DELETE DISCOUNT
   // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Delete("/:id")
-  deleteOrderById(
-    @Param("id") id: number,
-    @Res() res: Response) {
-    return this.discountService.deleteOrderById(id, res)
+  @Delete('/:id')
+  deleteOrderById(@Param('id') id: number, @Res() res: Response) {
+    return this.discountService.deleteOrderById(id, res);
   }
-
 }

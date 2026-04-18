@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Query, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  HttpCode,
+  Res,
+  Put,
+  Query,
+  Patch,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -12,24 +25,23 @@ import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
 import { CreateOrderDto, UpdateOrderDto } from './dto/create-order.dto';
 
-
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
 // @UseGuards(AuthenticationGuard, AuthorizationGuard)
-@ApiTags("DonHang")
+@ApiTags('DonHang')
 @Controller('api/order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) { }
+  constructor(private readonly orderService: OrderService) {}
 
   // ============================================
   //            GET ALL ORDER
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Get("/")
+  @Get('/')
   getAllOrder(@Res() res: Response) {
-    return this.orderService.getAllOrder(res)
+    return this.orderService.getAllOrder(res);
   }
 
   // ==================================================
@@ -186,9 +198,9 @@ export class OrderController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Get("summary")
+  @Get('summary')
   getOrderSummary(@Res() res: Response) {
-    return this.orderService.getOrderSummary(res)
+    return this.orderService.getOrderSummary(res);
   }
 
   // ============================================
@@ -197,35 +209,35 @@ export class OrderController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Get("export")
+  @Get('export')
   getOrderSuccessExcel(
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
-    return this.orderService.getOrderSuccessExcel(startDate, endDate, res)
+    return this.orderService.getOrderSuccessExcel(startDate, endDate, res);
   }
 
   // ============================================
   //             GET ORDER BY ID
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Get("/:id")
-  getOrderById(@Param("id") id: number, @Res() res: Response) {
-    return this.orderService.getOrderById(id, res)
+  @Get('/:id')
+  getOrderById(@Param('id') id: number, @Res() res: Response) {
+    return this.orderService.getOrderById(id, res);
   }
 
   // ============================================
   //         GET ORDER BY USER PHONE
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN, Role.USER)
-  @Get("user/:phone")
-  getOrderByUserId(@Param("phone") phone: string, @Res() res: Response) {
-    return this.orderService.getOrderByUserId(phone, res)
+  @Get('user/:phone')
+  getOrderByUserId(@Param('phone') phone: string, @Res() res: Response) {
+    return this.orderService.getOrderByUserId(phone, res);
   }
 
   // ============================================
@@ -233,9 +245,9 @@ export class OrderController {
   // ============================================
   @HttpCode(201)
   // @Roles(Role.ADMIN, Role.USER)
-  @Post("/")
+  @Post('/')
   postOrder(@Body() body: CreateOrderDto, @Res() res: Response) {
-    return this.orderService.postOrder(body, res)
+    return this.orderService.postOrder(body, res);
   }
 
   // ============================================
@@ -244,20 +256,23 @@ export class OrderController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Patch("/:id")
-  putOrderById(@Param("id") id: number, @Body() body: UpdateOrderDto, @Res() res: Response) {
-    return this.orderService.putOrderById(id, body, res)
+  @Patch('/:id')
+  putOrderById(
+    @Param('id') id: number,
+    @Body() body: UpdateOrderDto,
+    @Res() res: Response,
+  ) {
+    return this.orderService.putOrderById(id, body, res);
   }
 
   // ============================================
-  //            DELETE ORDER  
+  //            DELETE ORDER
   // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Delete("/:id")
-  deleteOrderById(@Param("id") id: number, @Res() res: Response) {
-    return this.orderService.deleteOrderById(id, res)
+  @Delete('/:id')
+  deleteOrderById(@Param('id') id: number, @Res() res: Response) {
+    return this.orderService.deleteOrderById(id, res);
   }
-
 }

@@ -1,4 +1,19 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, UseInterceptors, UploadedFiles, Patch, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  HttpCode,
+  Res,
+  Put,
+  UseInterceptors,
+  UploadedFiles,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { ContactService } from './contact.service';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -18,7 +33,7 @@ import { CreateContactDto, UpdateContactDto } from './dto/create-contact.dto';
 @ApiTags('LienHe')
 @Controller('api/contact')
 export class ContactController {
-  constructor(private readonly contactService: ContactService) { }
+  constructor(private readonly contactService: ContactService) {}
 
   // ============================================
   //            GET ALL CONTACT
@@ -52,15 +67,14 @@ export class ContactController {
     );
   }
 
-
   // ============================================
   //            GET ALL NEWS SUMARY
   // ============================================
   @HttpCode(200)
   // @Roles(Role.ADMIN)
-  @Get("/summary")
+  @Get('/summary')
   getContactSummary(@Res() res: Response) {
-    return this.contactService.getContactSummary(res)
+    return this.contactService.getContactSummary(res);
   }
 
   // ============================================
@@ -73,7 +87,6 @@ export class ContactController {
     return this.contactService.getById(id, res);
   }
 
-
   // ============================================
   //               POST CONTACT
   // ============================================
@@ -81,15 +94,12 @@ export class ContactController {
   // @UseGuards(AuthenticationGuard, AuthorizationGuard)
   // @Roles(Role.ADMIN)
   @Post('/')
-  postContact(
-    @Body() body: CreateContactDto,
-    @Res() res: Response,
-  ) {
+  postContact(@Body() body: CreateContactDto, @Res() res: Response) {
     return this.contactService.postContact(body, res);
   }
 
   // ============================================
-  //               PUT CONTACT 
+  //               PUT CONTACT
   // ============================================
   // @HttpCode(200)
   // @UseGuards(AuthenticationGuard, AuthorizationGuard)
@@ -109,7 +119,7 @@ export class ContactController {
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Patch("/:id")
+  @Patch('/:id')
   patchContact(
     @Param('id') id: number,
     @Body() body: UpdateContactDto,
@@ -119,13 +129,13 @@ export class ContactController {
   }
 
   // ============================================
-  //               DELETE CONTACT 
+  //               DELETE CONTACT
   // ============================================
   @HttpCode(200)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
   @Roles(Role.ADMIN)
-  @Delete("/:id")
-  deleteContact(@Param("id") id: number, @Res() res: Response) {
-    return this.contactService.deleteContact(id, res)
+  @Delete('/:id')
+  deleteContact(@Param('id') id: number, @Res() res: Response) {
+    return this.contactService.deleteContact(id, res);
   }
 }

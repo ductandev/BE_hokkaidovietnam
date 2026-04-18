@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, HttpCode, Res, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+  HttpCode,
+  Res,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { OrderDetailService } from './order-detail.service';
 
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -11,34 +23,32 @@ import { AuthenticationGuard } from 'src/guards/authentication.guard';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import { CreateOrderDetailDto } from './dto/create-order-detail.dto';
 
-
 @ApiBearerAuth()
 // @UseGuards(AuthGuard("jwt"))
 @UseGuards(AuthenticationGuard, AuthorizationGuard)
-@ApiTags("ChiTietDonHang")
+@ApiTags('ChiTietDonHang')
 @Controller('api/order-detail/')
 export class OrderDetailController {
-  constructor(private readonly orderDetailService: OrderDetailService) { }
-
+  constructor(private readonly orderDetailService: OrderDetailService) {}
 
   // ============================================
   //            GET ALL "ORDER-DETAIL"
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN)
-  @Get("/")
+  @Get('/')
   getAllOrderDetail(@Res() res: Response) {
-    return this.orderDetailService.getAllOrderDetail(res)
+    return this.orderDetailService.getAllOrderDetail(res);
   }
 
   // ============================================
   //       GET DETAIL "ORDER-DETAIL" BY ID
-  // ============================================ 
+  // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN, Role.USER)
-  @Get("/:id")
-  getOrderDetailById(@Param("id") id: number, @Res() res: Response) {
-    return this.orderDetailService.getOrderDetailById(id, res)
+  @Get('/:id')
+  getOrderDetailById(@Param('id') id: number, @Res() res: Response) {
+    return this.orderDetailService.getOrderDetailById(id, res);
   }
 
   // ============================================
@@ -46,9 +56,9 @@ export class OrderDetailController {
   // ============================================
   @HttpCode(201)
   @Roles(Role.ADMIN)
-  @Post("")
+  @Post('')
   postOrderDetail(@Body() body: CreateOrderDetailDto, @Res() res: Response) {
-    return this.orderDetailService.postOrderDetail(body, res)
+    return this.orderDetailService.postOrderDetail(body, res);
   }
 
   // ============================================
@@ -56,22 +66,22 @@ export class OrderDetailController {
   // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN)
-  @Put("/:id")
+  @Put('/:id')
   putOrderDetailById(
-    @Param("id") id: number,
+    @Param('id') id: number,
     @Body() body: CreateOrderDetailDto,
-    @Res() res: Response
+    @Res() res: Response,
   ) {
-    return this.orderDetailService.putOrderDetailById(id, body, res)
+    return this.orderDetailService.putOrderDetailById(id, body, res);
   }
 
   // ============================================
-  //            DELETE "ORDER-DETAIL"  
+  //            DELETE "ORDER-DETAIL"
   // ============================================
   @HttpCode(200)
   @Roles(Role.ADMIN)
-  @Delete("/:id")
-  deleteOrderDetailById(@Param("id") id: number, @Res() res: Response) {
-    return this.orderDetailService.deleteOrderDetailById(id, res)
+  @Delete('/:id')
+  deleteOrderDetailById(@Param('id') id: number, @Res() res: Response) {
+    return this.orderDetailService.deleteOrderDetailById(id, res);
   }
 }

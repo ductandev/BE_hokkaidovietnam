@@ -9,8 +9,9 @@ import { JwtModule } from '@nestjs/jwt';
       global: true,
       secret: 'NODE',
       // signOptions: { expiresIn: '60s' },
-    })],
+    }),
+  ],
   controllers: [AuthController],
   providers: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

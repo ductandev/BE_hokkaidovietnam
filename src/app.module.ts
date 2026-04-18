@@ -22,10 +22,9 @@ import { DiscountModule } from './discount/discount.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { UploadModule } from './upload/upload.module';
 
-
 @Module({
   imports: [
-    CloudinaryModule,                           // CloudinaryModule
+    CloudinaryModule, // CloudinaryModule
     ConfigModule.forRoot({ isGlobal: true }),
     MailerModule.forRoot({
       transport: {
@@ -48,8 +47,9 @@ import { UploadModule } from './upload/upload.module';
     ContactModule,
     CartModule,
     DiscountModule,
-    UploadModule],
+    UploadModule,
+  ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
 })
-export class AppModule { }
+export class AppModule {}

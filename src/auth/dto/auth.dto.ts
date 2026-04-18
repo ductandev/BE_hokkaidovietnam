@@ -1,18 +1,18 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class UserSignInDto {
-    @ApiProperty()
-    email_or_phone: string
-    @ApiProperty()
-    mat_khau: string
+  @ApiProperty()
+  email_or_phone: string;
+  @ApiProperty()
+  mat_khau: string;
 }
 
 export class ForgotPasswordDto {
-    @ApiProperty()
-    email: string
+  @ApiProperty()
+  email: string;
 }
 
 export class resetPasswordDto {
-    @ApiProperty()
-    newPassword: string
+  @ApiProperty()
+  newPassword: string;
 }

@@ -1,5 +1,13 @@
 import { UploadService } from './upload.service';
-import { Controller, Post, Body, HttpCode, Res, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  Res,
+  UseInterceptors,
+  UploadedFiles,
+} from '@nestjs/common';
 
 import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
@@ -10,7 +18,7 @@ import { FileUploadDto_upload } from './dto/upload.dto';
 @ApiTags('Upload')
 @Controller('api/upload')
 export class UploadController {
-  constructor(private readonly uploadService: UploadService) { }
+  constructor(private readonly uploadService: UploadService) {}
 
   // ============================================
   //               POST IMG
