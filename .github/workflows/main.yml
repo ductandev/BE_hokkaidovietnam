@@ -6,6 +6,7 @@ on:
 jobs:
   run_pull:
     name: run pull
+    if: false # Tắt CI/CD tạm thời - xóa dòng này khi muốn bật lại
     runs-on: ubuntu-latest
 
     steps:
